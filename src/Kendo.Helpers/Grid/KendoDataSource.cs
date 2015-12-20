@@ -7,6 +7,8 @@ namespace Kendo.Helpers.Grid
     /// </summary>
     public abstract class KendoDataSource
     {
+
+
         public abstract override string ToString();
     }
 }

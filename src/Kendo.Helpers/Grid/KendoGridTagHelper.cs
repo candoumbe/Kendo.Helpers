@@ -11,17 +11,19 @@ namespace Kendo.Helpers.Grid
 {
 
     [HtmlTargetElement(TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class KendoGridRazorHelper : TagHelper
+    public class KendoGridTagHelper : TagHelper
     {
 
-        public const string dataSourceAttributeName = "dataSource";
-        public const string columnsAttributesName = "columns";
+        public const string dataSourceAttributeName = "data-dataSource";
+        public const string columnsAttributesName = "data-columns";
+        
         /// <summary>
         /// Gets 
         /// </summary>
         [HtmlAttributeName(dataSourceAttributeName)]
         public KendoDataSource DataSource { get; set; }
 
+        
         /// <summary>
         /// Columns to display in the grid
         /// </summary>
@@ -30,9 +32,15 @@ namespace Kendo.Helpers.Grid
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.Attributes[dataSourceAttributeName] = SerializeObject(DataSource);
-            output.Attributes[columnsAttributesName] = SerializeObject(Columns);
+            if (DataSource != null)
+            {
+                output.Attributes[dataSourceAttributeName] = SerializeObject(DataSource);
+            }
 
+            if (Columns?.Any() ?? false)
+            {
+                output.Attributes[columnsAttributesName] = SerializeObject(Columns);
+            }
         }
     }
 }

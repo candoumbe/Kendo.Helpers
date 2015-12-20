@@ -17,9 +17,10 @@ namespace Kendo.Helpers.Grid
         public IEnumerable<string> Attributes { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets/Sets if the column is editable
         /// </summary>
         public bool? Editable { get; set; }
+
 
         public IEnumerable<KendoGridColumn> Columns { get; set; }
     }
