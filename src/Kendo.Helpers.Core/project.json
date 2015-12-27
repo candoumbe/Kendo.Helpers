@@ -1,8 +1,8 @@
 ﻿{
   "version": "1.0.0-*",
   "description": "Kendo.Helpers.Core Class Library",
-  "authors": [ "Sai" ],
-  "tags": [ "" ],
+  "authors": [ "Cyrille NDOUMBE" ],
+  "tags": [ "Kendo", "TagHelper", "Helper" ],
   "projectUrl": "",
   "licenseUrl": "",
 

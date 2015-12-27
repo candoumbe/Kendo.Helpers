@@ -1,12 +1,13 @@
 ﻿using System.Runtime.Serialization;
 using System.Text;
+using Kendo.Helpers.Core;
 
 namespace Kendo.Helpers.Data
 {
     [DataContract]
     public class KendoSchema : IKendoObject
     {
-        [DataMember(Name = nameof(Model),  EmitDefaultValue = false)]
+        [DataMember(Name = "model",  EmitDefaultValue = false)]
         public KendoModel Model { get; set; }
 
         public string ToJson()

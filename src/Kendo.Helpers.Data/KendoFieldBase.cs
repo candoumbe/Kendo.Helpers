@@ -3,6 +3,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.Serialization;
+using Kendo.Helpers.Core;
 
 namespace Kendo.Helpers.Data
 {

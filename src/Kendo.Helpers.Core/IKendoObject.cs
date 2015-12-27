@@ -1,4 +1,4 @@
-﻿namespace Kendo.Helpers
+﻿namespace Kendo.Helpers.Core
 {
     public interface IKendoObject
     {

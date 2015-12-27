@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
-using Kendo.Helpers.Grid;
 using Microsoft.AspNet.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Kendo.Helpers.Data;
 using Xunit;
 
 namespace Kendo.Helpers.Data.Tests
