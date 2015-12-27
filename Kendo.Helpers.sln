@@ -10,11 +10,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers", "src\Kendo.Helpers\Kendo.Helpers.xproj", "{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{772EF0B0-3333-4CFE-B27A-E9DDF766701C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.Grid.Tests", "test\Kendo.Helpers.Grid.Tests\Kendo.Helpers.Grid.Tests.xproj", "{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.Core", "src\Kendo.Helpers.Core\Kendo.Helpers.Core.xproj", "{EA9EFE78-C45B-4C13-9C11-2C37668F7B71}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.UI.Grid", "src\Kendo.Helpers.UI.Grid\Kendo.Helpers.UI.Grid.xproj", "{94201D2A-97C0-4167-BBD5-06A3C8C22311}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.Data", "src\Kendo.Helpers.Data\Kendo.Helpers.Data.xproj", "{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.Data.Tests", "test\Kendo.Helpers.Data.Tests\Kendo.Helpers.Data.Tests.xproj", "{678BCD59-D26F-44D4-A350-6E1BB111285F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,20 +26,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA9EFE78-C45B-4C13-9C11-2C37668F7B71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9EFE78-C45B-4C13-9C11-2C37668F7B71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9EFE78-C45B-4C13-9C11-2C37668F7B71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9EFE78-C45B-4C13-9C11-2C37668F7B71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94201D2A-97C0-4167-BBD5-06A3C8C22311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94201D2A-97C0-4167-BBD5-06A3C8C22311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94201D2A-97C0-4167-BBD5-06A3C8C22311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94201D2A-97C0-4167-BBD5-06A3C8C22311}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506}.Release|Any CPU.Build.0 = Release|Any CPU
-		{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678BCD59-D26F-44D4-A350-6E1BB111285F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678BCD59-D26F-44D4-A350-6E1BB111285F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678BCD59-D26F-44D4-A350-6E1BB111285F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678BCD59-D26F-44D4-A350-6E1BB111285F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{EA9EFE78-C45B-4C13-9C11-2C37668F7B71} = {D46DE0F8-9457-4279-A0A4-156EF1230D12}
+		{94201D2A-97C0-4167-BBD5-06A3C8C22311} = {D46DE0F8-9457-4279-A0A4-156EF1230D12}
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506} = {D46DE0F8-9457-4279-A0A4-156EF1230D12}
-		{946DAFD9-9CB5-49F9-890C-9DDA1412ADF8} = {772EF0B0-3333-4CFE-B27A-E9DDF766701C}
+		{678BCD59-D26F-44D4-A350-6E1BB111285F} = {772EF0B0-3333-4CFE-B27A-E9DDF766701C}
 	EndGlobalSection
 EndGlobal

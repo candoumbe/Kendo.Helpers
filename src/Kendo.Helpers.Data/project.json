@@ -1,0 +1,32 @@
+﻿{
+  "version": "1.0.0-alpha-01",
+  "description": "Kendo.Helpers Class Library",
+  "authors": [ "Cyrille NDOUMBE" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "dependencies": {
+    "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
+    "Newtonsoft.Json": "7.0.1",
+    "Kendo.Helpers.Core": "1.0.0"
+  },
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Runtime.Serialization": "4.0.0.0"
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-*",
+        "System.Collections": "4.0.11-*",
+        "System.Linq": "4.0.1-*",
+        "System.Runtime": "4.0.21-*",
+        "System.Threading": "4.0.11-*",
+        "System.Runtime.Serialization.Primitives": "4.1.0-*"
+
+      }
+    }
+
+  }
+}

@@ -1,0 +1,20 @@
+﻿using System.Runtime.Serialization;
+using static Newtonsoft.Json.JsonConvert;
+
+
+namespace Kendo.Helpers.Data
+{
+    [DataContract]
+    public class KendoRemoteDataSource : KendoDataSource
+    {
+        [DataMember(Name = "transport", EmitDefaultValue = false, Order = 1)]
+        public KendoTransport Transport { get; set; }
+
+        [DataMember(Name = "schema", EmitDefaultValue = false, Order = 2)]
+        public KendoSchema Schema { get; set; }
+                
+        public override string ToJson() => SerializeObject(this);
+
+        public override string ToString() => ToJson();
+    }
+}
