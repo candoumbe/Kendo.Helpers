@@ -73,7 +73,29 @@ namespace Kendo.Helpers.UI.Grid.Tests
             }
         }
 
-        
+
+        public static IEnumerable<object[]> CommandColumnsCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoGridCommandColumn
+                    {
+                        Name = "edit"
+                    },
+                    @"{""name"":""edit""}"
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CommandColumnsCases))]
+        public void ToJson(KendoGridCommandColumn column, string expectedString)
+            => ToJson((KendoGridColumnBase)column, expectedString);
+
+
+
         [Theory]
         [MemberData(nameof(FieldColumnsCases))]
         public void ToJson(KendoGridFieldColumn column, string expectedString)
