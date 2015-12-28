@@ -36,16 +36,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     @"{""field"":""Firstname"",""title"":""Firstname""}"
                 };
 
-                yield return new object[]
-                {
-                    new KendoGridFieldColumn
-                    {
-                        Field = "Firstname",
-                        Editable = false
-                    },
-                    @"{""field"":""Firstname"",""editable"":false}"
-                };
-
+                
                 yield return new object[]
                 {
                     new KendoGridFieldColumn

@@ -25,12 +25,7 @@ namespace Kendo.Helpers.UI.Grid
         [DataMember(Name = "attributes", EmitDefaultValue = false, Order = 4)]
         public IDictionary<string, object> Attributes { get; set; }
 
-        /// <summary>
-        /// Gets/Sets if the column is editable
-        /// </summary>
-        [DataMember(Name = "editable", EmitDefaultValue = false, Order = 3)]
-        public bool? Editable { get; set; }
-
+        
 
         public IEnumerable<KendoGridFieldColumn> Columns { get; set; }
 

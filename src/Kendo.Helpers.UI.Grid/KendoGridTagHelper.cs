@@ -19,6 +19,7 @@ namespace Kendo.Helpers.UI.Grid
         public const string dataSourceAttributeName = "data-dataSource";
         public const string columnsAttributesName = "data-columns";
         public const string reorderableAttributeName = "data-reoderable";
+        public const string roleAttributeName = "data-role";
 
         
         /// <summary>
@@ -40,6 +41,7 @@ namespace Kendo.Helpers.UI.Grid
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
+            output.Attributes[roleAttributeName] = "grid";
             if (DataSource != null)
             {
                 output.Attributes[dataSourceAttributeName] = DataSource.ToJson();
