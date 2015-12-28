@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.0.0-alpha-01",
   "description": "Kendo.Helpers.Core Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
   "tags": [ "Kendo", "TagHelper", "Helper" ],

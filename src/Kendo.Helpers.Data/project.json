@@ -8,7 +8,7 @@
   "dependencies": {
     "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
     "Newtonsoft.Json": "7.0.1",
-    "Kendo.Helpers.Core": "1.0.0"
+    "Kendo.Helpers.Core": "1.0.0-*"
   },
   "frameworks": {
     "dnx451": {
