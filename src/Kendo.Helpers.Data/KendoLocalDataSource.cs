@@ -23,7 +23,7 @@ namespace Kendo.Helpers.Data
             Data = objects ?? Enumerable.Empty<T>();
         }
 
-        public override string ToString() => SerializeObject(new JObject(Data));
+        public override string ToString() => SerializeObject(Data);
 
         public override string ToJson() => ToString();
     }

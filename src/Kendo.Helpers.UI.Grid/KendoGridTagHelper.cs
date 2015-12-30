@@ -11,14 +11,12 @@ using System.Text;
 
 namespace Kendo.Helpers.UI.Grid
 {
-
-    [HtmlTargetElement(TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("kendoGrid")]
     public class KendoGridTagHelper : TagHelper
     {
-
-        public const string dataSourceAttributeName = "data-dataSource";
-        public const string columnsAttributesName = "data-columns";
-        public const string reorderableAttributeName = "data-reoderable";
+        public const string dataSourceAttributeName = "asp-data-source";
+        public const string columnsAttributesName = "asp-data-columns";
+        public const string reorderableAttributeName = "asp-data-reoderable";
         public const string roleAttributeName = "data-role";
 
         
@@ -44,7 +42,7 @@ namespace Kendo.Helpers.UI.Grid
             output.Attributes[roleAttributeName] = "grid";
             if (DataSource != null)
             {
-                output.Attributes[dataSourceAttributeName] = DataSource.ToJson();
+                output.Attributes[dataSourceAttributeName.Substring(4)] = DataSource.ToJson();
             }
 
             if (Columns?.Any() ?? false)
@@ -65,7 +63,7 @@ namespace Kendo.Helpers.UI.Grid
                 }
                 string sbColumns = $"{(sbFields.Length > 0 || sbCommands.Length > 0)}";
 
-                output.Attributes[columnsAttributesName] = $@"""columns"":[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{{""command"":[{sbCommands}]}}]";
+                output.Attributes[columnsAttributesName.Substring(4)] = $@"""columns"":[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{{""command"":[{sbCommands}]}}]";
             }
         }
     }

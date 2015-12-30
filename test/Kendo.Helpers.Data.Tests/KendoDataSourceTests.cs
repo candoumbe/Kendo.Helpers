@@ -22,8 +22,23 @@ namespace Kendo.Helpers.Data.Tests
             {
                 yield return new object[] {
                     new KendoLocalDataSource(Enumerable.Empty<object>()),
-                    "{}"
+                    "[]"
                 };
+
+                yield return new object[]
+                {
+                    new KendoLocalDataSource(new dynamic[] { new { firstname = "bruce" } }),
+                    @"[{""firstname"":""bruce""}]"
+                };
+
+
+                yield return new object[] {
+                    new KendoLocalDataSource(new dynamic[] {
+                            new { firstname = "bruce", lastname="wayne", city="Gotham" },
+                            new { firstname = "clark", lastname="kent", city="Metropolis" },
+                        }),
+                    @"[{""firstname"":""bruce"",""lastname"":""wayne"",""city"":""Gotham""},{""firstname"":""clark"",""lastname"":""kent"",""city"":""Metropolis""}]"
+                };                  
             }
         }
 

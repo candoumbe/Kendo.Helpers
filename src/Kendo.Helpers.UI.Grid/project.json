@@ -1,9 +1,9 @@
 ﻿{
-  "version": "1.0.0-alpha-01",
+  "version": "1.0.0-alpha-03",
   "description": "Kendo.Helpers.UI.Grid Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
-  "tags": [ "Kendo", "TagHelper" ],
-  "projectUrl": "https://github.com/canoumbe/Kendo.Helpers",
+  "tags": [ "Kendo", "TagHelper", "Kendo UI" ],
+  "projectUrl": "https://github.com/candoumbe/Kendo.Helpers",
   "licenseUrl": "",
   "dependencies": {
     "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
