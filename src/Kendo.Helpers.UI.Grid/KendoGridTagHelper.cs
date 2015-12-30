@@ -39,6 +39,7 @@ namespace Kendo.Helpers.UI.Grid
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
+            output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes[roleAttributeName] = "grid";
             if (DataSource != null)
             {
@@ -61,9 +62,7 @@ namespace Kendo.Helpers.UI.Grid
                         sbCommands.Append($"{(sbCommands.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
                     }    
                 }
-                string sbColumns = $"{(sbFields.Length > 0 || sbCommands.Length > 0)}";
-
-                output.Attributes[columnsAttributesName.Substring(4)] = $@"""columns"":[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{{""command"":[{sbCommands}]}}]";
+                output.Attributes[columnsAttributesName.Substring(4)] = $@"""columns"":[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
             }
         }
     }

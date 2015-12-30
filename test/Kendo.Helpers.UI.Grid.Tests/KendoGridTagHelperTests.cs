@@ -22,11 +22,12 @@ namespace Kendo.Helpers.UI.Grid.Tests
                 {
                     new KendoGridTagHelper(),
                     new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  input => Task.FromResult((TagHelperContent)null)),
-                    (Expression<Func<TagHelperOutput, bool>>) (input => 
-                        input.TagName == "div" && 
-                        input.Attributes.Count() == 1 &&
-                        input.Attributes.ContainsName("data-role") && input.Attributes["data-role"].Value is string && ((string)input.Attributes["data-role"].Value) == "grid")
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag => 
+                        outputTag.TagName == "div" && 
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.Count() == 1 &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid")
                 };
 
                 yield return new object[]
@@ -39,12 +40,13 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
                     },
                     new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  input => Task.FromResult((TagHelperContent)null)),
-                    (Expression<Func<TagHelperOutput, bool>>) (input =>
-                        input.TagName == "div" &&
-                        input.Attributes.Count() == 2 &&
-                        input.Attributes.ContainsName("data-role") && input.Attributes["data-role"].Value is string && ((string)input.Attributes["data-role"].Value) == "grid" &&
-                        input.Attributes.ContainsName("data-source") && input.Attributes["data-source"].Value is string && ((string)input.Attributes["data-source"].Value == @"[{""firstname"":""bruce"",""lastname"":""wayne"",""city"":""Gotham""},{""firstname"":""clark"",""lastname"":""kent"",""city"":""Metropolis""}]"))
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
+                        outputTag.TagName == "div" &&
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.Count() == 2 &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
+                        outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string && ((string)outputTag.Attributes["data-source"].Value == @"[{""firstname"":""bruce"",""lastname"":""wayne"",""city"":""Gotham""},{""firstname"":""clark"",""lastname"":""kent"",""city"":""Metropolis""}]"))
                 };
 
                 yield return new object[]
@@ -57,12 +59,13 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
                     },
                     new TagHelperContext(new [] { new TagHelperAttribute("class", "row")}, new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  input => Task.FromResult((TagHelperContent)null)),
-                    (Expression<Func<TagHelperOutput, bool>>) (input =>
-                        input.TagName == "div" &&
-                        input.Attributes.Count() == 2 &&
-                        input.Attributes.ContainsName("data-role") && input.Attributes["data-role"].Value is string && ((string)input.Attributes["data-role"].Value) == "grid" &&
-                        input.Attributes.ContainsName("data-source") && input.Attributes["data-source"].Value is string && ((string)input.Attributes["data-source"].Value == @"[{""firstname"":""bruce"",""lastname"":""wayne"",""city"":""Gotham""},{""firstname"":""clark"",""lastname"":""kent"",""city"":""Metropolis""}]"))
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
+                        outputTag.TagName == "div" &&
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.Count() == 2 &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
+                        outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string && ((string)outputTag.Attributes["data-source"].Value == @"[{""firstname"":""bruce"",""lastname"":""wayne"",""city"":""Gotham""},{""firstname"":""clark"",""lastname"":""kent"",""city"":""Metropolis""}]"))
                 };
 
                 yield return new object[]
@@ -77,11 +80,33 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         }
                     },
                     new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  input => Task.FromResult((TagHelperContent)null)),
-                    (Expression<Func<TagHelperOutput, bool>>) (input => input.TagName == "div" && 
-                        input.Attributes.Count() == 2 &&
-                        input.Attributes.ContainsName("data-role") && input.Attributes["data-role"].Value is string && ((string)input.Attributes["data-role"].Value) == "grid" &&
-                        input.Attributes.ContainsName("data-columns") && input.Attributes["data-columns"].Value is string && ((string)input.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""}]}]")
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag => 
+                        outputTag.TagName == "div" &&
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.Count() == 2 &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""}]}]")
+
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridTagHelper()
+                    {
+                        Columns = new KendoGridColumnBase[]
+                        {
+                            new KendoGridFieldColumn() { Field = "Firstname" }
+                        }
+                    },
+                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag => 
+                        outputTag.TagName == "div" &&
+                        outputTag.Attributes.Count() == 2 &&
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""}]")
 
                 };
 
@@ -99,11 +124,13 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         }
                     },
                     new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  input => Task.FromResult((TagHelperContent)null)),
-                    (Expression<Func<TagHelperOutput, bool>>) (input => input.TagName == "div" &&
-                        input.Attributes.Count() == 2 &&
-                        input.Attributes.ContainsName("data-role") && input.Attributes["data-role"].Value is string && ((string)input.Attributes["data-role"].Value) == "grid" &&
-                        input.Attributes.ContainsName("data-columns") && input.Attributes["data-columns"].Value is string && ((string)input.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""},{""name"":""destroy""}]}]")
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
+                        outputTag.TagName == "div" &&
+                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
+                        outputTag.Attributes.Count() == 2 &&
+                        outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""},{""name"":""destroy""}]}]")
 
                 };
             }
