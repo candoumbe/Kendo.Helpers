@@ -41,6 +41,7 @@ namespace Kendo.Helpers.UI.Grid
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes[roleAttributeName] = "grid";
+
             if (DataSource != null)
             {
                 output.Attributes[dataSourceAttributeName.Substring(4)] = DataSource.ToJson();
@@ -62,7 +63,7 @@ namespace Kendo.Helpers.UI.Grid
                         sbCommands.Append($"{(sbCommands.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
                     }    
                 }
-                output.Attributes[columnsAttributesName.Substring(4)] = $@"""columns"":[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
+                output.Attributes[columnsAttributesName.Substring(4)] = $"[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
             }
         }
     }

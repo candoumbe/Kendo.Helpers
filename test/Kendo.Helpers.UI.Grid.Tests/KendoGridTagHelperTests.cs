@@ -86,7 +86,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
                         outputTag.Attributes.Count() == 2 &&
                         outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
-                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""}]}]")
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""}]}]")
 
                 };
 
@@ -106,7 +106,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.Attributes.Count() == 2 &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
                         outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
-                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""}]")
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"[{""field"":""Firstname""}]")
 
                 };
 
@@ -130,7 +130,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
                         outputTag.Attributes.Count() == 2 &&
                         outputTag.Attributes.ContainsName("data-role") && outputTag.Attributes["data-role"].Value is string && ((string)outputTag.Attributes["data-role"].Value) == "grid" &&
-                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"""columns"":[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""},{""name"":""destroy""}]}]")
+                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string && ((string)outputTag.Attributes["data-columns"].Value) == @"[{""field"":""Firstname""},{""field"":""Lastname""},{""command"":[{""name"":""edit""},{""name"":""destroy""}]}]")
 
                 };
             }
