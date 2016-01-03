@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json.Schema;
+using System.Runtime.Serialization;
 namespace Kendo.Helpers.Data
 {
     [DataContract]

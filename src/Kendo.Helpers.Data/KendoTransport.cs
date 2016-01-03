@@ -1,22 +1,45 @@
 ﻿using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Core;
+using Newtonsoft.Json.Schema;
 
 namespace Kendo.Helpers.Data
 {
     [DataContract]
     public class KendoTransport : IKendoObject
     {
-        [DataMember(Name = "create", EmitDefaultValue = false, Order = 1)]
+
+        public const string CreatePropertyName = "create";
+        public const string ReadPropertyName = "read";
+        public const string UpdatePropertyName = "update";
+        public const string DeletePropertyName = "destroy";
+
+        public static JSchema Schema => new JSchema
+        {
+            Title = "transport",
+            Type = JSchemaType.Object,
+            Properties =
+            {
+                [CreatePropertyName] = KendoTransportOperation.Schema,
+                [ReadPropertyName] = KendoTransportOperation.Schema,
+                [UpdatePropertyName] = KendoTransportOperation.Schema,
+                [DeletePropertyName] = KendoTransportOperation.Schema,
+            },
+            MinimumProperties = 1
+        };
+
+
+
+        [DataMember(Name = CreatePropertyName, EmitDefaultValue = false)]
         public KendoTransportOperation Create { get; set; }
 
-        [DataMember(Name = "read", EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = ReadPropertyName, EmitDefaultValue = false)]
         public KendoTransportOperation Read { get; set; }
 
-        [DataMember(Name = "update", EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = UpdatePropertyName, EmitDefaultValue = false)]
         public KendoTransportOperation Update { get; set; }
 
-        [DataMember(Name = "destroy", EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = DeletePropertyName, EmitDefaultValue = false)]
         public KendoTransportOperation Destroy { get; set; }
 
 

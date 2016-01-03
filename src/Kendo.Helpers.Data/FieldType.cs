@@ -4,6 +4,7 @@
     {
         String,
         Date,
-        Number
+        Number,
+        Boolean
     }
 }

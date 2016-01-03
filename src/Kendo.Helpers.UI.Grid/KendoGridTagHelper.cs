@@ -14,37 +14,37 @@ namespace Kendo.Helpers.UI.Grid
     [HtmlTargetElement("kendoGrid")]
     public class KendoGridTagHelper : TagHelper
     {
-        public const string dataSourceAttributeName = "asp-data-source";
-        public const string columnsAttributesName = "asp-data-columns";
-        public const string reorderableAttributeName = "asp-data-reoderable";
-        public const string roleAttributeName = "data-role";
+        public const string DataSourceAttributeName = "asp-data-source";
+        public const string ColumnsAttributeName = "asp-data-columns";
+        public const string ReorderableAttributeName = "asp-data-reoderable";
+        public const string RoleAttributeName = "data-role";
 
         
         /// <summary>
         /// Gets 
         /// </summary>
-        [HtmlAttributeName(dataSourceAttributeName)]
-        public KendoDataSource DataSource { get; set; }
+        [HtmlAttributeName(DataSourceAttributeName)]
+        public IKendoDataSource DataSource { get; set; }
 
-        [HtmlAttributeName(reorderableAttributeName)]
+        [HtmlAttributeName(ReorderableAttributeName)]
         public bool? Reorderable { get; set; }
 
 
         /// <summary>
         /// Columns to display in the grid
         /// </summary>
-        [HtmlAttributeName(columnsAttributesName)]
+        [HtmlAttributeName(ColumnsAttributeName)]
         public IEnumerable<KendoGridColumnBase> Columns { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes[roleAttributeName] = "grid";
+            output.Attributes[RoleAttributeName] = "grid";
 
             if (DataSource != null)
             {
-                output.Attributes[dataSourceAttributeName.Substring(4)] = DataSource.ToJson();
+                output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource.ToJson();
             }
 
             if (Columns?.Any() ?? false)
@@ -63,7 +63,7 @@ namespace Kendo.Helpers.UI.Grid
                         sbCommands.Append($"{(sbCommands.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
                     }    
                 }
-                output.Attributes[columnsAttributesName.Substring(4)] = $"[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
+                output.Attributes[ColumnsAttributeName.Substring(4)] = $"[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
             }
         }
     }

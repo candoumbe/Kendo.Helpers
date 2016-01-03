@@ -1,4 +1,6 @@
-﻿namespace Kendo.Helpers.Core
+﻿using Newtonsoft.Json.Schema;
+
+namespace Kendo.Helpers.Core
 {
     public interface IKendoObject
     {

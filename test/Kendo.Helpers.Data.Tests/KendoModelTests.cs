@@ -1,7 +1,10 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,7 +26,10 @@ namespace Kendo.Helpers.Data.Tests
                             new KendoStringField("Firstname")
                         }
                     },
-                    @"{""id"":""Id"",""fields"":{""Firstname"":{}}}"
+                     ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
+                        "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
+                    ))
                 };
 
                 yield return new object[]
@@ -34,10 +40,12 @@ namespace Kendo.Helpers.Data.Tests
                         Fields = new KendoFieldBase[]
                         {
                             new KendoDateField("BirthDate"),
-
                         }
                     },
-                    @"{""id"":""Id"",""fields"":{""BirthDate"":{""type"":""date""}}}"
+                    ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
+                        "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
+                    ))
                 };
 
                 yield return new object[]
@@ -53,7 +61,10 @@ namespace Kendo.Helpers.Data.Tests
 
                         }
                     },
-                    @"{""id"":""Id"",""fields"":{""BirthDate"":{""type"":""date"",""defaultValue"":""23/06/1983""}}}"
+                    ((Expression<Func<string, bool>>)(json => 
+                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
+                        "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
+                    ))
                 };
             }
         }
@@ -61,7 +72,7 @@ namespace Kendo.Helpers.Data.Tests
 
         [Theory]
         [MemberData(nameof(Cases))]
-        public void ToJson(KendoModel schema, string expectedString)
-            => schema.ToJson().Should().Be(expectedString);
+        public void ToJson(KendoModel schema, Expression<Func<string, bool>> jsonMatcher)
+            => schema.ToJson().Should().Match(jsonMatcher);
     }
 }

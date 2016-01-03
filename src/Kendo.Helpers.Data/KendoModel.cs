@@ -4,16 +4,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Kendo.Helpers.Core;
+using Newtonsoft.Json.Schema;
 
 namespace Kendo.Helpers.Data
 {
     [DataContract]
     public class KendoModel : IKendoObject
     {
-        [DataMember(Name = "id", EmitDefaultValue = false, Order = 1)]
+        /// <summary>
+        /// Name of the json property where the id is store
+        /// </summary>
+        public const string IdPropertyName = "id";
+
+        public const string FieldsPropertyName = "fields";
+
+        public static JSchema Schema => new JSchema
+        {
+            Type = JSchemaType.Object,
+            Properties =
+            {
+                [IdPropertyName] = new JSchema { Type = JSchemaType.String, Description = "Name of the property that uniquely identifies an item" },
+                [FieldsPropertyName] = new JSchema {Type = JSchemaType.Object | JSchemaType.Array, Description = "A set of key/value pairs the configure the model fields. The key specifies the name of the field. Quote the key if it contains spaces or other symbols which are not valid for a JavaScript identifier."}
+            }
+        };
+
+
+        [DataMember(Name = IdPropertyName, EmitDefaultValue = false, Order = 1)]
         public string Id { get; set; }
 
-        [DataMember(Name = "fields", EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = FieldsPropertyName, EmitDefaultValue = false, Order = 2)]
         public IEnumerable<KendoFieldBase> Fields { get; set; }
 
 
@@ -21,50 +40,27 @@ namespace Kendo.Helpers.Data
         {
             JObject jObject = new JObject();
 
-            jObject.Add("id", Id);
+            jObject.Add(IdPropertyName, Id);
             if (Fields?.Any() ?? false)
             {
-                JObject fields = new JObject();
-                IEnumerable<JProperty> fieldsProperties = Fields
-                    .Select(item =>
-                    {
-                        JObject fieldConfiguration = new JObject();
-                        switch (item.Type)
-                        {
-                            case FieldType.Date:
-                                fieldConfiguration.Add("type", "date");
-                                break;
-                            case FieldType.Number:
-                                fieldConfiguration.Add("type", "number");
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if (item.DefaultValue != null)
-                        {
-                            fieldConfiguration.Add("defaultValue", item.DefaultValue);
-                        }
-
-                        if (item.Editable ?? false)
-                        {
-                            fieldConfiguration.Add("editable", item.Editable.Value);
-                        }
-
-                        return new JProperty(item.Name, fieldConfiguration);
-                    })
+                JArray fields = new JArray();
+                IEnumerable<JObject> fieldsProperties = Fields
+                    .Select(item => JObject.Parse(item.ToJson()))
                     .ToArray();
 
-                foreach (JProperty property in fieldsProperties)
+                foreach (var property in fieldsProperties)
                 {
                     fields.Add(property);
                 }
 
-                jObject.Add("fields", fields);
+                jObject.Add(FieldsPropertyName, JArray.FromObject(fields));
             }
             
-            return jObject.ToString(Formatting.None);
+            return jObject.ToString();
         }
+
+
+        public override string ToString() => ToJson();
 
     }
 }
