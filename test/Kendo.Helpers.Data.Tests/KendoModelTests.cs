@@ -12,7 +12,62 @@ namespace Kendo.Helpers.Data.Tests
 {
     public class KendoModelTests
     {
-        public static IEnumerable<object[]> Cases
+
+        public static IEnumerable<object[]> SchemaCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoModel(), false
+                };
+
+
+                yield return new object[]
+                {
+                    new KendoModel()
+                    {
+                        Id = "Id",
+                        Fields = new KendoFieldBase[]
+                        {
+                            new KendoStringField("Firstname")
+                        }
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoModel()
+                    {
+                        Id = "Id",
+                        Fields = new KendoFieldBase[]
+                        {
+                            new KendoDateField("BirthDate"),
+                        }
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoModel()
+                    {
+                        Id = "Id",
+                        Fields = new KendoFieldBase[]
+                        {
+                            new KendoDateField("BirthDate") {
+                                DefaultValue = new DateTime(1983, 6, 23).ToString("dd/MM/yyyy")
+                            },
+
+                        }
+                    },
+                    true
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> ToJsonCases
         {
             get
             {
@@ -26,9 +81,9 @@ namespace Kendo.Helpers.Data.Tests
                             new KendoStringField("Firstname")
                         }
                     },
-                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
+                    ((Expression<Func<string, bool>>)(json =>
                         "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
+
                     ))
                 };
 
@@ -43,7 +98,6 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
                         "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
                     ))
                 };
@@ -62,7 +116,6 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string, bool>>)(json => 
-                        JObject.Parse(json).IsValid(KendoModel.Schema) &&
                         "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
                     ))
                 };
@@ -71,8 +124,15 @@ namespace Kendo.Helpers.Data.Tests
 
 
         [Theory]
-        [MemberData(nameof(Cases))]
+        [MemberData(nameof(ToJsonCases))]
         public void ToJson(KendoModel schema, Expression<Func<string, bool>> jsonMatcher)
             => schema.ToJson().Should().Match(jsonMatcher);
+
+
+        [Theory]
+        [MemberData(nameof(SchemaCases))]
+        public void Schema(KendoModel schema, bool expectedValidity)
+            => JObject.Parse(schema.ToJson()).IsValid(KendoModel.Schema)
+            .Should().Be(expectedValidity);
     }
 }

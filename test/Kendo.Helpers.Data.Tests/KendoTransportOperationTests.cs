@@ -1,9 +1,12 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
+using Newtonsoft.Json.Schema;
 
 namespace Kendo.Helpers.Data.Tests
 {
@@ -11,7 +14,7 @@ namespace Kendo.Helpers.Data.Tests
     {
 
 
-        public static IEnumerable<object[]> Cases
+        public static IEnumerable<object[]> ToJsonCases
         {
             get
             {
@@ -21,7 +24,9 @@ namespace Kendo.Helpers.Data.Tests
                     {
                         Url = "url/to/ressources/create"
                     },
-                    @"{""url"":""url/to/ressources/create""}"
+                    ((Expression<Func<string,bool>>)(json =>
+                        "url/to/ressources/create".Equals((string)JObject.Parse(json)[KendoTransportOperation.UrlPropertyName])
+                    ))
                 };
 
                 yield return new object[]
@@ -31,7 +36,10 @@ namespace Kendo.Helpers.Data.Tests
                         Url = "url/to/ressources/delete",
                         Type ="POST"
                     },
-                    @"{""url"":""url/to/ressources/delete"",""type"":""POST""}"
+                    ((Expression<Func<string,bool>>)(json =>
+                        "url/to/ressources/delete".Equals((string)JObject.Parse(json)[KendoTransportOperation.UrlPropertyName]) &&
+                        "POST".Equals((string)JObject.Parse(json)[KendoTransportOperation.TypePropertyName])
+                    ))
                 };
 
                 yield return new object[]
@@ -41,15 +49,77 @@ namespace Kendo.Helpers.Data.Tests
                         Url = "url/to/ressources/delete",
                         ContentType = "json"
                     },
-                    @"{""url"":""url/to/ressources/delete"",""contentType"":""json""}"
+                    ((Expression<Func<string,bool>>)(json =>
+                        "url/to/ressources/delete".Equals((string)JObject.Parse(json)[KendoTransportOperation.UrlPropertyName]) &&
+                        "json".Equals((string)JObject.Parse(json)[KendoTransportOperation.ContentTypePropertyName])
+                    ))
                 };
             }
         }
 
-       
+
+        public static IEnumerable<object[]> SchemaCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoTransportOperation(), false
+                };
+                yield return new object[]
+                {
+                    new KendoTransportOperation() { Cache = false}, false
+                };
+
+                yield return new object[]
+                {
+                    new KendoTransportOperation()
+                    {
+                        Url = "url/to/ressources/create"
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoTransportOperation()
+                    {
+                        Cache = true,
+                        Url = "url/to/ressources/read"
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoTransportOperation()
+                    {
+                        Url = "url/to/ressources/delete",
+                        Type ="POST"
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoTransportOperation()
+                    {
+                        Url = "url/to/ressources/delete",
+                        ContentType = "json"
+                    },
+                    true
+                };
+            }
+        }
+
         [Theory]
-        [MemberData(nameof(Cases))]
-        public void ToJson(KendoTransportOperation operation, string expectedResult)
-            => operation.ToJson().Should().Be(expectedResult);
+        [MemberData(nameof(SchemaCases))]
+        public void Schema(KendoTransportOperation configuration, bool expectedValidity)
+            => JObject.Parse(configuration.ToJson()).IsValid(KendoTransportOperation.Schema).Should().Be(expectedValidity);
+
+        [Theory]
+        [MemberData(nameof(ToJsonCases))]
+        public void ToJson(KendoTransportOperation operation, Expression<Func<string, bool>> jsonMatcher)
+            => operation.ToJson().Should().Match(jsonMatcher);
     }
 }

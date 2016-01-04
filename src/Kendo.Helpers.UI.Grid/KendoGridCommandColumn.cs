@@ -14,7 +14,7 @@ namespace Kendo.Helpers.UI.Grid
         public const string TextPropertyName = "text";
 
 
-        public override JSchema Schema => new JSchema
+        public static JSchema Schema => new JSchema
         {
             Title = "command",
             Type = JSchemaType.Object,
@@ -22,7 +22,9 @@ namespace Kendo.Helpers.UI.Grid
             {
                 [NamePropertyName] = new JSchema { Type = JSchemaType.String },
                 [TextPropertyName] = new JSchema { Type = JSchemaType.String }
-            }
+            },
+            MinimumProperties = 1
+
             
         };
 

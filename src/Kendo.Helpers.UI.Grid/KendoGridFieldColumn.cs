@@ -13,18 +13,23 @@ namespace Kendo.Helpers.UI.Grid
         public const string FieldPropertyName = "field";
         public const string TitlePropertyName = "title";
         public const string AttributesPropertyName = "attributes";
+        public const string EncodedPropertyName = "encoded";
 
-        public override JSchema Schema => new JSchema
+        public static JSchema Schema => new JSchema
         {
             Type = JSchemaType.Object,
             Properties  =
             {
                 [FieldPropertyName] = new JSchema { Type = JSchemaType.String },
                 [TitlePropertyName] = new JSchema { Type = JSchemaType.String },
-                [AttributesPropertyName] = new JSchema { Type = JSchemaType.Object }
+                [AttributesPropertyName] = new JSchema { Type = JSchemaType.Object },
+                [EncodedPropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = true }
             },
             Required = {FieldPropertyName}
         };
+
+        [DataMember(Name = EncodedPropertyName, EmitDefaultValue = false)]
+        public bool? Encoded { get; set; }
 
         /// <summary>
         /// Gets/sets the field the column will represents

@@ -65,6 +65,11 @@ namespace Kendo.Helpers.UI.Grid
                 }
                 output.Attributes[ColumnsAttributeName.Substring(4)] = $"[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
             }
+
+            if (Reorderable.HasValue)
+            {
+                output.Attributes.Add(ReorderableAttributeName.Substring(4), Reorderable.Value);
+            }
         }
     }
 }

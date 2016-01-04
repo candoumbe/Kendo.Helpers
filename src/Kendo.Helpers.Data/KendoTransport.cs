@@ -25,7 +25,8 @@ namespace Kendo.Helpers.Data
                 [UpdatePropertyName] = KendoTransportOperation.Schema,
                 [DeletePropertyName] = KendoTransportOperation.Schema,
             },
-            MinimumProperties = 1
+            MinimumProperties = 1,
+            AllowAdditionalProperties = false
         };
 
 

@@ -1,19 +1,20 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Kendo.Helpers.UI.Grid.Tests
 {
-    // This project can output the Class library as a NuGet Package.
-    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
     public class KendoGridColumnTests
     {
 
 
-        public static IEnumerable<object[]> FieldColumnsCases
+        public static IEnumerable<object[]> FieldColumnsToJsonCases
         {
             get
             {
@@ -23,7 +24,35 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     {
                         Field = "Firstname"
                     },
-                    @"{""field"":""Firstname""}"
+                    ((Expression<Func<string, bool>>) (json => 
+                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Encoded = false
+                    },
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) &&
+                        !(bool)JObject.Parse(json)[KendoGridFieldColumn.EncodedPropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Encoded = true
+                    },
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) &&
+                        (bool)JObject.Parse(json)[KendoGridFieldColumn.EncodedPropertyName]
+                    ))
                 };
 
                 yield return new object[]
@@ -33,7 +62,10 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         Field = "Firstname",
                         Title = "Firstname"
                     },
-                    @"{""field"":""Firstname"",""title"":""Firstname""}"
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) &&
+                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName])
+                    ))
                 };
 
                 
@@ -44,7 +76,10 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         Field = "Birthdate",
                         Title = "Birth date",
                     },
-                    @"{""field"":""Birthdate"",""title"":""Birth date""}"
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Birthdate".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) &&
+                        "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName])
+                    ))
                 };
 
                 yield return new object[]
@@ -59,13 +94,94 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             ["font-size"] = "14px"
                         }
                     },
-                    @"{""field"":""Birthdate"",""title"":""Birth date"",""attributes"":{""class"":""td-class"",""font-size"":""14px""}}"
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Birthdate".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) &&
+                        "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName]) &&
+                        "td-class".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["class"]) &&
+                        "14px".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["font-size"])
+                    ))
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> FieldColumnsSchemaCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn(), false
+                };
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname"
+                    },
+                   true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Encoded = true
+                    },
+                   true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Title = "Firstname"
+                    },
+                    false
                 };
             }
         }
 
 
-        public static IEnumerable<object[]> CommandColumnsCases
+
+        public static IEnumerable<object[]> CommandColumnsSchemaCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoGridCommandColumn(), false
+                };
+                yield return new object[]
+                {
+                    new KendoGridCommandColumn
+                    {
+                        Name = "edit"
+                    },
+                   true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridCommandColumn
+                    {
+                        Name = "delete"
+                    },
+                   true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridCommandColumn
+                    {
+                        Text = "Firstname"
+                    },
+                    true
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> CommandColumnsToJsonCases
         {
             get
             {
@@ -75,24 +191,40 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     {
                         Name = "edit"
                     },
-                    @"{""name"":""edit""}"
+                   ((Expression<Func<string, bool>>) (json =>
+                        "edit".Equals((string)JObject.Parse(json)[KendoGridCommandColumn.NamePropertyName])
+                    ))
                 };
             }
         }
 
         [Theory]
-        [MemberData(nameof(CommandColumnsCases))]
-        public void ToJson(KendoGridCommandColumn column, string expectedString)
-            => ToJson((KendoGridColumnBase)column, expectedString);
+        [MemberData(nameof(CommandColumnsToJsonCases))]
+        public void ToJson(KendoGridCommandColumn column, Expression<Func<string, bool>> jsonMatcher)
+            => ToJson((KendoGridColumnBase)column, jsonMatcher);
 
 
 
         [Theory]
-        [MemberData(nameof(FieldColumnsCases))]
-        public void ToJson(KendoGridFieldColumn column, string expectedString)
-            => ToJson((KendoGridColumnBase)column, expectedString);
+        [MemberData(nameof(FieldColumnsToJsonCases))]
+        public void ToJson(KendoGridFieldColumn column, Expression<Func<string, bool>> jsonMatcher)
+            => ToJson((KendoGridColumnBase)column, jsonMatcher);
 
-        private void ToJson(KendoGridColumnBase column, string expectedString)
-            => column.ToJson().Should().Be(expectedString);
+        private void ToJson(KendoGridColumnBase column, Expression<Func<string, bool>> jsonMatcher)
+            => column.ToJson().Should().Match(jsonMatcher);
+
+        [Theory]
+        [MemberData(nameof(CommandColumnsSchemaCases))]
+        public void CommandColumnSchema(KendoGridCommandColumn command, bool expectedValidity)
+            => Schema(command, KendoGridCommandColumn.Schema, expectedValidity);
+
+        [Theory]
+        [MemberData(nameof(FieldColumnsSchemaCases))]
+        public void FieldColumnSchema(KendoGridFieldColumn column, bool expectedValidity)
+            => Schema(column, KendoGridFieldColumn.Schema, expectedValidity);
+
+
+        private void Schema(KendoGridColumnBase baseColumn, JSchema schema, bool expectedValidity)
+            => JObject.Parse(baseColumn.ToJson()).IsValid(schema).Should().Be(expectedValidity);
     }
 }
