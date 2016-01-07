@@ -80,6 +80,13 @@ namespace Kendo.Helpers.UI.Grid.Tests
                 {
                     new GridFilterableConfiguration { Extra = true }, true
                 };
+
+                yield return new object[]
+                {
+                    new GridFilterableConfiguration {
+                        Extra = true
+                    }, true
+                };
             }
         }
 
