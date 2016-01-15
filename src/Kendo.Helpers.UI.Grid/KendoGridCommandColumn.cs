@@ -8,9 +8,15 @@ namespace Kendo.Helpers.UI.Grid
     [DataContract]
     public class KendoGridCommandColumn : KendoGridColumnBase
     {
-
+        
+        /// <summary>
+        /// Name of the json property where the name of the command is stored
+        /// </summary>
         public const string NamePropertyName = "name";
 
+        /// <summary>
+        /// Name of the json property where the text of the commmand is stored
+        /// </summary>
         public const string TextPropertyName = "text";
 
 
@@ -18,6 +24,7 @@ namespace Kendo.Helpers.UI.Grid
         {
             Title = "command",
             Type = JSchemaType.Object,
+
             Properties =
             {
                 [NamePropertyName] = new JSchema { Type = JSchemaType.String },
@@ -41,5 +48,7 @@ namespace Kendo.Helpers.UI.Grid
         public string Text { get; set; }
 
         public override string ToJson() => SerializeObject(this);
+
+        public override string ToString() => ToJson();
     }
 }

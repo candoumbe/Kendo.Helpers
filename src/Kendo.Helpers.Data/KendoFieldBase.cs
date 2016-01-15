@@ -36,7 +36,7 @@ namespace Kendo.Helpers.Data
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"{name} cannot be null or whitespace");
+                throw new ArgumentOutOfRangeException(nameof(name), $"{nameof(name)} cannot be null or whitespace");
             }
 
             Name = name;

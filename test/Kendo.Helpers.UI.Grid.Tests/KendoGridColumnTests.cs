@@ -210,6 +210,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
         public void ToJson(KendoGridFieldColumn column, Expression<Func<string, bool>> jsonMatcher)
             => ToJson((KendoGridColumnBase)column, jsonMatcher);
 
+
         private void ToJson(KendoGridColumnBase column, Expression<Func<string, bool>> jsonMatcher)
             => column.ToJson().Should().Match(jsonMatcher);
 

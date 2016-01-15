@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Schema;
 using System.Linq.Expressions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Kendo.Helpers.Data.Tests
 {
     public class KendoFieldTests
     {
+        private readonly ITestOutputHelper _output;
+
         public static IEnumerable<object[]> ToJsonCases
         {
             get
@@ -38,7 +41,7 @@ namespace Kendo.Helpers.Data.Tests
         {
             get
             {
-                
+
                 yield return new object[]
                 {
                     new KendoStringField("Firstname"), true
@@ -46,17 +49,31 @@ namespace Kendo.Helpers.Data.Tests
             }
         }
 
+        
+        public KendoFieldTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         [MemberData(nameof(ToJsonCases))]
         public void ToJson(KendoFieldBase kf, Expression<Func<string, bool>> jsonMatcher)
-            => kf.ToJson().Should().Match(jsonMatcher);
+        {
+            _output.WriteLine(kf.ToJson());
+            kf.ToJson().Should().Match(jsonMatcher);
+        }
+
+        
 
         [Theory]
         [MemberData(nameof(KendoStringFieldSchemaCases))]
         public void Schema(KendoFieldBase kf, bool expectedValidity)
-            => JObject.Parse(kf.ToJson())
-                .IsValid(KendoFieldBase.Schema(kf.Name, kf.Type))
-                .Should().Be(expectedValidity);
+        {
+            _output.WriteLine(kf.ToJson());
+            JObject.Parse(kf.ToJson())
+                  .IsValid(KendoFieldBase.Schema(kf.Name, kf.Type))
+                  .Should().Be(expectedValidity);
+        }
 
     }
 }

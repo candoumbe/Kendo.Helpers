@@ -16,9 +16,18 @@ namespace Kendo.Helpers.Data
     [DataContract]
     public class KendoLocalDataSource<T> : IKendoDataSource 
     {
-
+        /// <summary>
+        /// Name of the property that holds the "page" configuration
+        /// </summary>
         public const string PagePropertyName = "page";
+        /// <summary>
+        /// Name of the property that holds the "pageSize" configuration
+        /// </summary>
         public const string PageSizePropertyName = "pageSize";
+
+        /// <summary>
+        /// Name of the property that holds the "data" property
+        /// </summary>
         public const string DataPropertyName = "data";
 
         public static JSchema Schema => new JSchema

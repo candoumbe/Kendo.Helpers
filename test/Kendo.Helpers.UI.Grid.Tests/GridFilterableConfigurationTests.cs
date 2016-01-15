@@ -78,15 +78,27 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
                 yield return new object[]
                 {
+                    new GridFilterableConfiguration { Extra = null }, false
+                };
+
+                yield return new object[]
+                {
+                    new GridFilterableConfiguration { Extra = true }, true
+                };
+
+
+                yield return new object[]
+                {
                     new GridFilterableConfiguration { Extra = true }, true
                 };
 
                 yield return new object[]
                 {
-                    new GridFilterableConfiguration {
-                        Extra = true
-                    }, true
+                    new GridFilterableConfiguration { Extra = true }, true
                 };
+
+
+
             }
         }
 

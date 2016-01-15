@@ -9,13 +9,25 @@ namespace Kendo.Helpers.UI.Grid
     [DataContract]
     public class GridFilterableConfiguration : IKendoObject
     {
-
+        /// <summary>
+        /// Name of the json property that holds the "mode" configuration
+        /// </summary>
         public const string ModePropertyName = "mode";
+        /// <summary>
+        /// Name of the json property that holds the "extra" configuration
+        /// </summary>
         public const string ExtraPropertyName = "extra";
 
+
+        /// <summary>
+        /// Gets/Sets the Filterable mode
+        /// </summary>
         [DataMember(Name = ModePropertyName, EmitDefaultValue = false)]
         public GridFilterableMode? Mode { get; set; }
 
+        /// <summary>
+        /// Gets/sets if the filter menu allows the user to input a second criterion
+        /// </summary>
         [DataMember(Name = ExtraPropertyName, EmitDefaultValue = false)]
         public bool? Extra { get; set; }
 

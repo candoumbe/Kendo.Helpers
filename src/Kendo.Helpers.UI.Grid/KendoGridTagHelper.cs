@@ -14,10 +14,25 @@ namespace Kendo.Helpers.UI.Grid
     [HtmlTargetElement("kendoGrid")]
     public class KendoGridTagHelper : TagHelper
     {
+        /// <summary>
+        /// Name of the property that holds the dataSource configuration
+        /// </summary>
         public const string DataSourceAttributeName = "asp-data-source";
+        /// <summary>
+        /// Name of the ASP HTML attribute that holds the configuration of the columns
+        /// </summary>
         public const string ColumnsAttributeName = "asp-data-columns";
+        /// <summary>
+        /// Name of the ASP HTML attribute that defines how columns can be reordered
+        /// </summary>
         public const string ReorderableAttributeName = "asp-data-reoderable";
+
         public const string RoleAttributeName = "data-role";
+
+        /// <summary>
+        /// Name of the ASP HTML attribute that defines the pageable configuration of the grid
+        /// </summary>
+        public const string PageableAttributeName = "asp-data-pageable";
 
         
         /// <summary>
@@ -29,19 +44,23 @@ namespace Kendo.Helpers.UI.Grid
         [HtmlAttributeName(ReorderableAttributeName)]
         public bool? Reorderable { get; set; }
 
-
         /// <summary>
         /// Columns to display in the grid
         /// </summary>
         [HtmlAttributeName(ColumnsAttributeName)]
         public IEnumerable<KendoGridColumnBase> Columns { get; set; }
 
+        /// <summary>
+        /// Pageable configuration of the grid
+        /// </summary>
+        [HtmlAttributeName(PageableAttributeName)]
+        public PageableConfiguration Pageable { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes[RoleAttributeName] = "grid";
-
             if (DataSource != null)
             {
                 output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource.ToJson();
@@ -49,26 +68,18 @@ namespace Kendo.Helpers.UI.Grid
 
             if (Columns?.Any() ?? false)
             {
-                
-                StringBuilder sbFields = new StringBuilder();
-                StringBuilder sbCommands = new StringBuilder();
-                foreach (KendoGridColumnBase item in Columns)
-                {
-                    if (item is KendoGridFieldColumn)
-                    {
-                        sbFields.Append($"{(sbFields.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
-                    }
-                    else if (item is KendoGridCommandColumn)
-                    {
-                        sbCommands.Append($"{(sbCommands.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
-                    }    
-                }
-                output.Attributes[ColumnsAttributeName.Substring(4)] = $"[{sbFields}{(sbFields.Length > 0 && sbCommands.Length > 0 ? "," : string.Empty)}{(sbCommands.Length > 0 ? $@"{{""command"":[{sbCommands}]}}" : string.Empty)}]";
+                output.Attributes[ColumnsAttributeName.Substring(4)] = Columns.ToJson();
             }
+           
 
             if (Reorderable.HasValue)
             {
                 output.Attributes.Add(ReorderableAttributeName.Substring(4), Reorderable.Value);
+            }
+
+            if (Pageable != null)
+            {
+                output.Attributes[PageableAttributeName.Substring(4)] = Pageable.ToJson();
             }
         }
     }
