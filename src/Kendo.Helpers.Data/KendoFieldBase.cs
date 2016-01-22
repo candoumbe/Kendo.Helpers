@@ -32,11 +32,18 @@ namespace Kendo.Helpers.Data
         /// </summary>
         public const string NullablePropertyName = "nullable";
 
-        public KendoFieldBase(string name, FieldType fieldType)
+        /// <summary>
+        /// Name of the json property that will hold the "from" configuration
+        /// </summary>
+        public const string FromPropertyName = "from";
+
+       
+
+        protected KendoFieldBase(string name, FieldType fieldType)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"{nameof(name)} cannot be null or whitespace");
+                throw new ArgumentOutOfRangeException(nameof(name), $"{nameof(name)} cannot be null or empty or whitespace");
             }
 
             Name = name;
@@ -47,16 +54,11 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Gets the schema that validates the current field
         /// </summary>
-        public static JSchema Schema(string fieldName, FieldType fieldType)
+        public static JSchema Schema(FieldType fieldType)
         {
 
-            if (string.IsNullOrWhiteSpace(fieldName))
-            {
-                throw new ArgumentOutOfRangeException(nameof(fieldName), $"{nameof(fieldName)} cannot be null or empty");
-            }
-
-
-            JSchema schema = null;
+            
+            JSchema schema;
             switch (fieldType)
             {
                 case FieldType.Date:
@@ -65,40 +67,31 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [fieldName] = new JSchema
-                            {
-                                Type = JSchemaType.Object,
-                                Properties =
-                                {
-                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "date"},
-                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.None },
-                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false }
-                                }
-                            }
+                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
+                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = 0 },
+                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+
                         },
-                        Required = { TypePropertyName }
+                        Required = { TypePropertyName },
+                        AllowAdditionalProperties = false
                     };
                     break;
                 case FieldType.Number:
-                    schema = new JSchema()
+                    schema = new JSchema
                     {
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [fieldName] = new JSchema
-                            {
-                                Type = JSchemaType.Object,
-                                Properties =
-                                {
-                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
-                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Number, Default = 0 },
-                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false }
-                                }
-                            }
+                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
+                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Number, Default = 0 },
+                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
                         },
-                        Required = { TypePropertyName }
+                        Required = { TypePropertyName },
+                        AllowAdditionalProperties = false
                     };
                     break;
                 case FieldType.Boolean:
@@ -107,19 +100,15 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [fieldName] = new JSchema
-                            {
-                                Type = JSchemaType.Object,
-                                Properties =
-                                {
-                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "boolean"},
-                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Boolean },
-                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false }
-                                }
-                            }
+                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "boolean"},
+                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Boolean },
+                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
                         },
-                        Required = { TypePropertyName }
+                        Required = {TypePropertyName},
+                        AllowAdditionalProperties = false
+
                     };
                     break;
                 default:
@@ -128,26 +117,19 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [fieldName] = new JSchema
-                            {
-                                Type = JSchemaType.Object,
-                                Properties =
-                                {
-                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "string"},
-                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = string.Empty },
-                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false }
-                                }
-                            },
+                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "string"},
+                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = string.Empty },
+                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
                         },
-                        Required = { TypePropertyName }
+                        Required = {TypePropertyName},
+                        AllowAdditionalProperties = false
                     };
                     break;
             }
 
             return schema;
-
-
         }
 
         [DataMember(Name = DefaultValuePropertyName, EmitDefaultValue = false)]
@@ -157,56 +139,71 @@ namespace Kendo.Helpers.Data
         public string Name { get; }
 
         [DataMember(Name = TypePropertyName, EmitDefaultValue = false)]
-        [JsonConverter(typeof(StringEnumConverter))]
         public FieldType Type { get; }
 
+        /// <summary>
+        /// Gets/sets if the field can be edited
+        /// </summary>
         [DataMember(Name = EditablePropertyName, EmitDefaultValue = false)]
         public bool? Editable { get; set; }
 
+        /// <summary>
+        /// Gets/sets if the field can be set to null
+        /// </summary>
         [DataMember(Name = NullablePropertyName, EmitDefaultValue = false)]
         public bool? Nullable { get; set; }
 
+        /// <summary>
+        /// Gets/sets the name of the backing item
+        /// </summary>
+        [DataMember(Name = FromPropertyName, EmitDefaultValue = false)]
+        public string From { get; set; }
+
+        
         public virtual string ToJson()
         {
-            JObject json = new JObject();
+            JObject properties = new JObject();
             switch (Type)
             {
                 case FieldType.Date:
-                    json.Add(TypePropertyName, nameof(FieldType.Date).ToLower());
+                    properties.Add(TypePropertyName, nameof(FieldType.Date).ToLower());
                     break;
                 case FieldType.Number:
-                    json.Add(TypePropertyName, nameof(FieldType.Number).ToLower());
+                    properties.Add(TypePropertyName, nameof(FieldType.Number).ToLower());
                     break;
                 case FieldType.Boolean:
-                    json.Add(TypePropertyName, nameof(FieldType.Boolean).ToLower());
+                    properties.Add(TypePropertyName, nameof(FieldType.Boolean).ToLower());
                     break;
                 default:
-                    json.Add(TypePropertyName, nameof(FieldType.String).ToLower());
+                    properties.Add(TypePropertyName, nameof(FieldType.String).ToLower());
                     break;
             }
 
             if (DefaultValue != null)
             {
-                json.Add(DefaultValuePropertyName, JToken.FromObject(DefaultValue));
+                properties.Add(DefaultValuePropertyName, JToken.FromObject(DefaultValue));
             }
 
             if (Editable.HasValue)
             {
-                json.Add(EditablePropertyName, Editable.Value);
+                properties.Add(EditablePropertyName, Editable.Value);
             }
 
             if (Nullable.HasValue)
             {
-                json.Add(NullablePropertyName, Nullable.Value);
+                properties.Add(NullablePropertyName, Nullable.Value);
             }
-            
-            Debug.Assert(JObject.Parse(json.ToString()).IsValid(Schema(Name, Type)), 
-                $@"The result of ""{nameof(ToJson)}"" should be valid according the schema obtained calling {nameof(KendoFieldBase)}.{nameof(Schema)}(""{Name}"", {nameof(FieldType)}.{Type})");
+
+            if (!string.IsNullOrWhiteSpace(From))
+            {
+                properties.Add(FromPropertyName, From);
+            }
            
-            return json.ToString();
+            
+            return properties.ToString();
 
         }
 
-
+        public override string ToString() => ToJson();
     }
 }

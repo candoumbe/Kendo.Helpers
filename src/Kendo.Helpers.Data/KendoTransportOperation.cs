@@ -9,7 +9,7 @@ namespace Kendo.Helpers.Data
     public class KendoTransportOperation : IKendoObject
     {
         /// <summary>
-        /// Name of the property that holds the url endpoint
+        /// Name of the property that holds the "url" endpoint
         /// </summary>
         public const string UrlPropertyName = "url";
         /// <summary>
@@ -49,7 +49,7 @@ namespace Kendo.Helpers.Data
         };
 
         /// <summary>
-        /// Gets/Sets the url of the endpoint the datasource will make requests to
+        /// Gets/Sets the url of the endpoint the datasource will get its date from
         /// </summary>
         [DataMember(Name = UrlPropertyName, EmitDefaultValue = false, IsRequired = true)]
         public string Url { get; set; }

@@ -34,7 +34,7 @@ namespace Kendo.Helpers.Data
                 [CreatePropertyName] = KendoTransportOperation.Schema,
                 [ReadPropertyName] = KendoTransportOperation.Schema,
                 [UpdatePropertyName] = KendoTransportOperation.Schema,
-                [DeletePropertyName] = KendoTransportOperation.Schema,
+                [DeletePropertyName] = KendoTransportOperation.Schema
             },
             MinimumProperties = 1,
             AllowAdditionalProperties = false

@@ -8,12 +8,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Kendo.Helpers.Data.Tests
 {
     public class KendoSchemaTests
     {
-        
+        private readonly ITestOutputHelper _output;
 
         public static IEnumerable<object[]> ToJsonCases
         {
@@ -65,7 +66,10 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string, bool>>)(json =>
-                        "items".Equals((string) JObject.Parse(json)[KendoSchema.DataPropertyName])
+                        "items".Equals((string) JObject.Parse(json)[KendoSchema.DataPropertyName]) 
+                        && "Id".Equals((string) JObject.Parse(json)[KendoSchema.ModelPropertyName][KendoModel.IdPropertyName])
+                        && nameof(FieldType.String).ToLower().Equals(JObject.Parse(json)[KendoSchema.ModelPropertyName][KendoModel.FieldsPropertyName]["Firstname"][KendoFieldBase.TypePropertyName].Value<string>())
+
                     ))
                 };
 
@@ -138,7 +142,8 @@ namespace Kendo.Helpers.Data.Tests
 
                 yield return new object[]
                 {
-                    new KendoSchema {
+                    new KendoSchema
+                    {
                         Data = "items",
                         Total = "count",
                         Type = null,
@@ -155,8 +160,10 @@ namespace Kendo.Helpers.Data.Tests
                         ((string) JObject.Parse(json)[KendoSchema.TypePropertyName]) == null &&
                         "count".Equals((string) JObject.Parse(json)[KendoSchema.TotalPropertyName]) &&
                         "items".Equals((string) JObject.Parse(json)[KendoSchema.DataPropertyName]) &&
-                        "Id".Equals((string) JObject.Parse(json)[KendoSchema.ModelPropertyName][KendoModel.IdPropertyName]) 
-                    ))                };
+                        "Id".Equals((string) JObject.Parse(json)[KendoSchema.ModelPropertyName][KendoModel.IdPropertyName])
+                        && JObject.Parse(json)[KendoSchema.ModelPropertyName].IsValid(KendoModel.Schema) 
+                    ))
+                };
             }
         }
 
@@ -280,17 +287,29 @@ namespace Kendo.Helpers.Data.Tests
         }
 
 
+        public KendoSchemaTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
 
         [Theory]
         [MemberData(nameof(ToJsonCases))]
         public void ToJson(KendoSchema schema, Expression<Func<string, bool>> jsonMatch)
-            => schema.ToJson().Should().Match(jsonMatch);
+        {
+            _output.WriteLine($"Testing {schema}{Environment.NewLine}against{Environment.NewLine}{jsonMatch}");
+            schema.ToJson().Should().Match(jsonMatch);
+        }
+
 
         [Theory]
         [MemberData(nameof(SchemaCases))]
         public void Schema(KendoSchema schema, bool expectedValidity)
-            => JObject.Parse(schema.ToJson()).IsValid(KendoSchema.Schema)
-                .Should()
-                .Be(expectedValidity);
+        {
+            _output.WriteLine($"Validating {schema}{Environment.NewLine}against{Environment.NewLine}{KendoSchema.Schema}");
+            JObject.Parse(schema.ToJson()).IsValid(KendoSchema.Schema)
+                  .Should()
+                  .Be(expectedValidity);
+        }
     }
 }

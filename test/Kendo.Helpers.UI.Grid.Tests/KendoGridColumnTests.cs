@@ -7,12 +7,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Kendo.Helpers.UI.Grid.Tests
 {
     public class KendoGridColumnTests
     {
-
+        private readonly ITestOutputHelper _output;
 
         public static IEnumerable<object[]> FieldColumnsToJsonCases
         {
@@ -88,6 +89,21 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     {
                         Field = "Birthdate",
                         Title = "Birth date",
+                        Format = "dd/MM/yyyy"
+                    },
+                    ((Expression<Func<string, bool>>) (json =>
+                        "Birthdate".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) 
+                        && "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName])
+                        && "dd/MM/yyyy".Equals((string) JObject.Parse(json)[KendoGridFieldColumn.FormatPropertyName])
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Birthdate",
+                        Title = "Birth date",
                         Attributes = new Dictionary<string, object>
                         {
                             ["class"] = "td-class",
@@ -99,6 +115,84 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName]) &&
                         "td-class".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["class"]) &&
                         "14px".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["font-size"])
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Groupable = false
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName]) 
+                       && !(bool)JObject.Parse(json)[KendoGridFieldColumn.GroupablePropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Groupable = true
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && (bool)JObject.Parse(json)[KendoGridFieldColumn.GroupablePropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Hidden = false
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && !(bool)JObject.Parse(json)[KendoGridFieldColumn.HiddenPropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Hidden = true
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && (bool)JObject.Parse(json)[KendoGridFieldColumn.HiddenPropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Locked = false
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && !(bool)JObject.Parse(json)[KendoGridFieldColumn.LockedPropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Locked = true
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && (bool)JObject.Parse(json)[KendoGridFieldColumn.LockedPropertyName]
                     ))
                 };
             }
@@ -120,6 +214,163 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     },
                    true
                 };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Birthdate",
+                        Title = "Birth date",
+                        Attributes = new Dictionary<string, object>
+                        {
+                            ["class"] = "td-class",
+                            ["font-size"] = "14px"
+                        },
+                        Format = "dd/MM/yyyy"
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Groupable = true
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Groupable = false
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Groupable = null
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Hidden = true
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Hidden = false
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Hidden = null
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Locked = true
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Locked = false
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Locked = null
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Lockable = true
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Lockable = false
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Lockable = null
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        MinScreenWidth = 750
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        MinScreenWidth = null
+                    },
+                    true
+                };
+
 
                 yield return new object[]
                 {
@@ -198,6 +449,12 @@ namespace Kendo.Helpers.UI.Grid.Tests
             }
         }
 
+
+        public KendoGridColumnTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         [MemberData(nameof(CommandColumnsToJsonCases))]
         public void ToJson(KendoGridCommandColumn column, Expression<Func<string, bool>> jsonMatcher)
@@ -212,7 +469,10 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
 
         private void ToJson(KendoGridColumnBase column, Expression<Func<string, bool>> jsonMatcher)
-            => column.ToJson().Should().Match(jsonMatcher);
+        {
+            _output.WriteLine($"{column}{Environment.NewLine}{jsonMatcher}");
+            column.ToJson().Should().Match(jsonMatcher);
+        }
 
         [Theory]
         [MemberData(nameof(CommandColumnsSchemaCases))]
@@ -226,6 +486,10 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
 
         private void Schema(KendoGridColumnBase baseColumn, JSchema schema, bool expectedValidity)
-            => JObject.Parse(baseColumn.ToJson()).IsValid(schema).Should().Be(expectedValidity);
+        {
+            _output.WriteLine($"Validating {baseColumn}{Environment.NewLine}against{Environment.NewLine}{schema}");
+
+            JObject.Parse(baseColumn.ToJson()).IsValid(schema).Should().Be(expectedValidity);
+        }
     }
 }

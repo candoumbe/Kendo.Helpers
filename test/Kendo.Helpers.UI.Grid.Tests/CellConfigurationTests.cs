@@ -27,6 +27,11 @@ namespace Kendo.Helpers.UI.Grid.Tests
 
                 yield return new object[]
                 {
+                    new CellConfiguration { Enabled = null }, false
+                };
+
+                yield return new object[]
+                {
                     new CellConfiguration { Enabled = false }, true
                 };
 
@@ -51,7 +56,9 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     new CellConfiguration() { Enabled = true },
                     ((Expression<Func<string, bool>>) (json =>
                         (bool)JObject.Parse(json)[CellConfiguration.EnabledPropertyName] &&
-                        JObject.Parse(json).Properties().Count() == 1
+                        JObject.Parse(json).Properties().Count() == 1 
+                        
+
                     ))
                 };
             }

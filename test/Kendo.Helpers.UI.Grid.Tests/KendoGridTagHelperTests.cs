@@ -117,16 +117,13 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string
                         &&
                             "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumn.FieldPropertyName]) 
-                            &&
-                            "Lastname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridFieldColumn.FieldPropertyName])
+                            && "Lastname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridFieldColumn.FieldPropertyName])
                             && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2] is JObject
                             && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2].IsValid(KendoGridCommandColumn.Schema)
+                            && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2]["command"] is JArray
                             && "edit".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2]["command"][0][KendoGridCommandColumn.NamePropertyName])
-                            //&& "edit".Equals(JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2][KendoGridCommandColumn.NamePropertyName])
-                        )
+                    )
                 };
-
-                               
 
                 yield return new object[]
                 {
@@ -147,10 +144,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.Attributes.ContainsName("data-pageable") && outputTag.Attributes["data-pageable"].Value is string &&
                             ((int)(JObject.Parse((string)outputTag.Attributes["data-pageable"].Value)[PageableConfiguration.ButtonCountPropertyName]) == 10
                         ))
-
                 };
-
-
             }
         }
 
@@ -164,8 +158,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
         public void Process(KendoGridTagHelper tagHelper, TagHelperContext context, TagHelperOutput output, Expression<Func<TagHelperOutput, bool>> outputMatcher)
         {
             _testOutputHelper.WriteLine(SerializeObject(tagHelper, Indented));
-            tagHelper.Process(context, output);
 
+            tagHelper.Process(context, output);
             output.Should().Match(outputMatcher);
         }
     }

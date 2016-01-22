@@ -10,6 +10,9 @@ namespace Kendo.Helpers.UI.Grid
     {
         
         public abstract string ToJson();
+
+
+        public override string ToString() => ToJson();
     }
 }
 

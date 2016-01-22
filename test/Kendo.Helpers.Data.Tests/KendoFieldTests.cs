@@ -13,7 +13,7 @@ namespace Kendo.Helpers.Data.Tests
     {
         private readonly ITestOutputHelper _output;
 
-        public static IEnumerable<object[]> ToJsonCases
+        public static IEnumerable<object[]> KendoStringFieldToJsonCases
         {
             get
             {
@@ -21,19 +21,71 @@ namespace Kendo.Helpers.Data.Tests
                 {
                     new KendoStringField("Firstname"),
                     ((Expression<Func<string, bool>>)(json => 
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema("Firstname", FieldType.String)) &&
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.String)) &&
                         nameof(FieldType.String).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                    ))
+                };
+                
+            }
+        }
+
+
+        public static IEnumerable<object[]> KendoDateFieldToJsonCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoDateField("BirthDate") {
+                                DefaultValue = new DateTime(1983, 6, 23).ToString("dd/MM/yyyy")
+                            },
+
+                    ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) &&
+                        nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                    ))
+                };
+
+
+                yield return new object[]
+                {
+                    new KendoDateField("BirthDate"),
+
+                    ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) 
+                        && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                     ))
                 };
 
                 yield return new object[]
                 {
-                    new KendoStringField("Firstname") { DefaultValue = null },
+                    new KendoDateField("birthdate") {
+                                DefaultValue = new DateTime(1983, 6, 23).ToString("dd/MM/yyyy"),
+                                From = "item.birth_date"
+                            },
+
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema("Firstname", FieldType.String)) &&
-                        nameof(FieldType.String).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) 
+                        && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName]) 
+                        && "item.birth_date".Equals((string) JObject.Parse(json)[KendoFieldBase.FromPropertyName])
                     ))
                 };
+
+                yield return new object[]
+                {
+                    new KendoStringField("firstname")
+                    {
+                        DefaultValue = string.Empty,
+                        From = "item.firstname"
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.String))
+                        && string.Empty == ((string) JObject.Parse(json)[KendoFieldBase.DefaultValuePropertyName])
+                        && nameof(FieldType.String).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                        && "item.firstname".Equals((string) JObject.Parse(json)[KendoFieldBase.FromPropertyName])
+                    ))
+                };
+
             }
         }
 
@@ -50,28 +102,49 @@ namespace Kendo.Helpers.Data.Tests
         }
 
         
+
+        public static IEnumerable<object[]> KendoDateFieldSchemaCases
+        {
+            get
+            {
+
+                yield return new object[]
+                {
+                    new KendoDateField("BirthDate") {
+                                DefaultValue = new DateTime(1983, 6, 23).ToString("dd/MM/yyyy")
+                            }, true
+                };
+            }
+        }
+
+
         public KendoFieldTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
         [Theory]
-        [MemberData(nameof(ToJsonCases))]
+        [MemberData(nameof(KendoStringFieldToJsonCases))]
+        [MemberData(nameof(KendoDateFieldToJsonCases))]
         public void ToJson(KendoFieldBase kf, Expression<Func<string, bool>> jsonMatcher)
         {
-            _output.WriteLine(kf.ToJson());
+            _output.WriteLine($"Testing : {kf}{Environment.NewLine} against {Environment.NewLine} {jsonMatcher} ");
             kf.ToJson().Should().Match(jsonMatcher);
         }
 
         
 
         [Theory]
-        [MemberData(nameof(KendoStringFieldSchemaCases))]
+        //[MemberData(nameof(KendoStringFieldSchemaCases))]
+        [MemberData(nameof(KendoDateFieldSchemaCases))]
         public void Schema(KendoFieldBase kf, bool expectedValidity)
         {
-            _output.WriteLine(kf.ToJson());
+            JSchema schema = KendoFieldBase.Schema(kf.Type);
+
+            _output.WriteLine($"Testing :{kf} {Environment.NewLine} against {Environment.NewLine} {schema}");
+
             JObject.Parse(kf.ToJson())
-                  .IsValid(KendoFieldBase.Schema(kf.Name, kf.Type))
+                  .IsValid(schema)
                   .Should().Be(expectedValidity);
         }
 

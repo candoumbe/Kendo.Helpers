@@ -23,11 +23,22 @@ namespace Kendo.Helpers.Data
             Type = JSchemaType.Object,
             Properties =
             {
-                [IdPropertyName] = new JSchema { Type = JSchemaType.String, Description = "Name of the property that uniquely identifies an item" },
-                [FieldsPropertyName] = new JSchema {Type = JSchemaType.Object | JSchemaType.Array, Description = "A set of key/value pairs the configure the model fields. The key specifies the name of the field. Quote the key if it contains spaces or other symbols which are not valid for a JavaScript identifier."}
-            }
+                [IdPropertyName] = new JSchema
+                {
+                    Type = JSchemaType.String,
+                    Description = "Name of the property that uniquely identifies an item"
+                },
+                [FieldsPropertyName] = new JSchema
+                {
+                    Type = JSchemaType.Object,
+                    Description = "A set of key/value pairs the configure the model fields. The key specifies the name of the field. Quote the key if it contains spaces or other symbols which are not valid for a JavaScript identifier."
+                }
+            },
+            MinimumProperties = 1
         };
 
+
+        
 
         [DataMember(Name = IdPropertyName, EmitDefaultValue = false, Order = 1)]
         public string Id { get; set; }
@@ -38,25 +49,26 @@ namespace Kendo.Helpers.Data
 
         public string ToJson()
         {
-            JObject jObject = new JObject();
+            JObject obj = new JObject();
 
-            jObject.Add(IdPropertyName, Id);
+            obj.Add(IdPropertyName, Id);
             if (Fields?.Any() ?? false)
             {
-                JArray fields = new JArray();
-                IEnumerable<JObject> fieldsProperties = Fields
-                    .Select(item => JObject.Parse(item.ToJson()))
-                    .ToArray();
+                IEnumerable<JProperty> fieldsProperties = Fields
+                    ?.Select(item => new JProperty(item.Name, JObject.Parse(item.ToJson())))
+                    .ToArray() 
+                    ?? Enumerable.Empty<JProperty>();
 
-                foreach (var property in fieldsProperties)
+                JObject properties = new JObject();
+                foreach (JProperty prop in fieldsProperties)
                 {
-                    fields.Add(property);
+                    properties.Add(prop);
                 }
 
-                jObject.Add(FieldsPropertyName, JArray.FromObject(fields));
+                obj.Add(FieldsPropertyName, properties);
             }
             
-            return jObject.ToString();
+            return obj.ToString();
         }
 
 
