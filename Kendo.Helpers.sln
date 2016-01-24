@@ -22,6 +22,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.Data.Tests", 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.UI.Grid.Tests", "test\Kendo.Helpers.UI.Grid.Tests\Kendo.Helpers.UI.Grid.Tests.xproj", "{0C772E4D-8506-4B61-A7CC-34782D90375A}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.UI.AutoComplete", "src\Kendo.Helpers.UI.AutoComplete\Kendo.Helpers.UI.AutoComplete.xproj", "{3FE35C22-0170-4B4A-8CD2-631597648D83}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Kendo.Helpers.UI.AutoComplete.Tests", "test\Kendo.Helpers.UI.AutoComplete.Tests\Kendo.Helpers.UI.AutoComplete.Tests.xproj", "{C15D955E-DC62-4F1B-B658-320F2D9CC994}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +52,14 @@ Global
 		{0C772E4D-8506-4B61-A7CC-34782D90375A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C772E4D-8506-4B61-A7CC-34782D90375A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C772E4D-8506-4B61-A7CC-34782D90375A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FE35C22-0170-4B4A-8CD2-631597648D83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FE35C22-0170-4B4A-8CD2-631597648D83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FE35C22-0170-4B4A-8CD2-631597648D83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FE35C22-0170-4B4A-8CD2-631597648D83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C15D955E-DC62-4F1B-B658-320F2D9CC994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15D955E-DC62-4F1B-B658-320F2D9CC994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15D955E-DC62-4F1B-B658-320F2D9CC994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15D955E-DC62-4F1B-B658-320F2D9CC994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +70,7 @@ Global
 		{9BBE3666-3DAF-42EF-89E0-BA8B9CCCC506} = {D46DE0F8-9457-4279-A0A4-156EF1230D12}
 		{678BCD59-D26F-44D4-A350-6E1BB111285F} = {772EF0B0-3333-4CFE-B27A-E9DDF766701C}
 		{0C772E4D-8506-4B61-A7CC-34782D90375A} = {772EF0B0-3333-4CFE-B27A-E9DDF766701C}
+		{3FE35C22-0170-4B4A-8CD2-631597648D83} = {D46DE0F8-9457-4279-A0A4-156EF1230D12}
+		{C15D955E-DC62-4F1B-B658-320F2D9CC994} = {772EF0B0-3333-4CFE-B27A-E9DDF766701C}
 	EndGlobalSection
 EndGlobal
