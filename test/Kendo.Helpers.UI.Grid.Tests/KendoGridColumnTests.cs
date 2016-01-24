@@ -1,11 +1,10 @@
 ﻿using FluentAssertions;
+using GenFu;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -115,6 +114,19 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TitlePropertyName]) &&
                         "td-class".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["class"]) &&
                         "14px".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.AttributesPropertyName]["font-size"])
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Template = "<strong>#: Firstname # </strong>"
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.FieldPropertyName])
+                       && "<strong>#: Firstname # </strong>".Equals((string)JObject.Parse(json)[KendoGridFieldColumn.TemplatePropertyName])
                     ))
                 };
 
@@ -390,7 +402,31 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     },
                     false
                 };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Template = null
+                    },
+                    true
+                };
+
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Field = "Firstname",
+                        Template = "<strong>#: Firstname # </strong>"
+                    },
+                    true
+                };
+
+
+
             }
+
         }
 
 

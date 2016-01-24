@@ -13,6 +13,10 @@ namespace Kendo.Helpers.UI.Grid
         public static JSchema Schema => new JSchema
         {
             Type = JSchemaType.Object,
+            Properties =
+            {
+                [EnabledPropertyName] = new JSchema { Type = JSchemaType.Boolean }
+            },
             MinimumProperties = 1
         };
 

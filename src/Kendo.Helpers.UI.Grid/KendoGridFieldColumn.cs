@@ -57,6 +57,10 @@ namespace Kendo.Helpers.UI.Grid
         /// </summary>
         public const string MinScreenWidthPropertyName = "minScreenWidth";
 
+        /// <summary>
+        /// Name of the json property that holds the "template" configuration
+        /// </summary>
+        public const string TemplatePropertyName = "template";
 
 
         public static JSchema Schema => new JSchema
@@ -73,7 +77,8 @@ namespace Kendo.Helpers.UI.Grid
                 [HiddenPropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
                 [LockedPropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
                 [MinScreenWidthPropertyName] = new JSchema { Type = JSchemaType.Number },
-                [LockablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = true }
+                [LockablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = true },
+                [TemplatePropertyName] = new JSchema { Type = JSchemaType.String }
             },
             Required = {FieldPropertyName},
             AllowAdditionalProperties = false
@@ -138,6 +143,12 @@ namespace Kendo.Helpers.UI.Grid
         public IDictionary<string, object> Attributes { get; set; }
 
         public IEnumerable<KendoGridFieldColumn> Columns { get; set; }
+
+        /// <summary>
+        /// Gets/sets the template used to render the value of the column
+        /// </summary>
+        [DataMember(Name = TemplatePropertyName, EmitDefaultValue = false)]
+        public string Template { get; set; }
 
         public override string ToJson()
             => SerializeObject(this);
