@@ -117,27 +117,27 @@ namespace Kendo.Helpers.UI.Grid
         public bool? Hidden { get; set; }
 
         /// <summary>
-        /// Gets/sets if the column is locked
+        /// Gets/sets if the column is locked.
         /// </summary>
         [DataMember(Name = LockedPropertyName, EmitDefaultValue = false)]
         public bool? Locked { get; set; }
 
 
         /// <summary>
-        /// Gets/sets if the column is lockable
+        /// Gets/sets if the column is lockable.
         /// </summary>
         [DataMember(Name = LockablePropertyName, EmitDefaultValue = false)]
         public bool? Lockable { get; set; }
 
         /// <summary>
-        /// Gets/sets if the column is lockable
+        /// Gets/sets the screen width under which the column will not be displayed.
         /// </summary>
         [DataMember(Name = MinScreenWidthPropertyName, EmitDefaultValue = false)]
         public int? MinScreenWidth { get; set; }
 
 
         /// <summary>
-        /// Gets/sets additional CSS attributes for the current column
+        /// Gets/sets additional CSS attributes for the current column.
         /// </summary>
         [DataMember(Name = AttributesPropertyName, EmitDefaultValue = false)]
         public IDictionary<string, object> Attributes { get; set; }

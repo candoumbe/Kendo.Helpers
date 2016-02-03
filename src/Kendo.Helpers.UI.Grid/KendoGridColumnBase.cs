@@ -32,7 +32,7 @@ namespace System.Collections.Generic
                 StringBuilder sbCommands = new StringBuilder();
                 foreach (KendoGridColumnBase item in columns)
                 {
-                    if (item is KendoGridFieldColumn)
+                    if (item is KendoGridFieldColumn || item is KendoGridTemplateColumn)
                     {
                         sbFields.Append($"{(sbFields.Length > 0 ? "," : string.Empty)}{item.ToJson()}");
                     }

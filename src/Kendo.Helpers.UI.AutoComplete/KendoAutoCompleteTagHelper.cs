@@ -11,10 +11,18 @@ namespace Kendo.Helpers.UI.AutoComplete
         /// </summary>
         public const string RoleAttributeName = "data-role";
 
+
+        public const string TypeAttributeName = "type";
+
         /// <summary>
         /// Name of the attribute to use to enable tag helper assistance to configure data-source
         /// </summary>
         public const string DataSourceAttributeName = "asp-data-source";
+
+        /// <summary>
+        /// Name of the widget
+        /// </summary>
+        public const string WidgetName = "autocomplete";
 
         /// <summary>
         /// Gets/sets the <see cref="IKendoDataSource"/>
@@ -25,9 +33,10 @@ namespace Kendo.Helpers.UI.AutoComplete
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "div";
-            output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes[RoleAttributeName] = "autocomplete";
+            output.TagName = "input";
+            output.Attributes[TypeAttributeName] = "text";
+            output.TagMode = TagMode.SelfClosing;
+            output.Attributes[RoleAttributeName] = WidgetName;
 
             output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource?.ToJson();
         }

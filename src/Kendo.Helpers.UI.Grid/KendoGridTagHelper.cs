@@ -11,7 +11,10 @@ using System.Text;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [HtmlTargetElement("kendoGrid")]
+    /// <summary>
+    /// Tag helper suitable to build 
+    /// </summary>
+    [HtmlTargetElement]
     public class KendoGridTagHelper : TagHelper
     {
         /// <summary>

@@ -423,8 +423,34 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     true
                 };
 
+                yield return new object[]
+                {
+                    new KendoGridFieldColumn
+                    {
+                        Template = "<strong>#: Firstname # </strong>"
+                    },
+                    false
+                };
+            }
+        }
 
 
+        public static IEnumerable<object[]> TemplateColumnsSchemaCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoGridTemplateColumn(), true
+                };
+                yield return new object[]
+                            {
+                    new KendoGridTemplateColumn
+                    {
+                        Template = ""
+                    },
+                   true
+                };
             }
 
         }
@@ -455,15 +481,6 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         Name = "delete"
                     },
                    true
-                };
-
-                yield return new object[]
-                {
-                    new KendoGridCommandColumn
-                    {
-                        Text = "Firstname"
-                    },
-                    true
                 };
             }
         }
@@ -519,6 +536,12 @@ namespace Kendo.Helpers.UI.Grid.Tests
         [MemberData(nameof(FieldColumnsSchemaCases))]
         public void FieldColumnSchema(KendoGridFieldColumn column, bool expectedValidity)
             => Schema(column, KendoGridFieldColumn.Schema, expectedValidity);
+
+
+        [Theory]
+        [MemberData(nameof(TemplateColumnsSchemaCases))]
+        public void FieldColumnSchema(KendoGridTemplateColumn column, bool expectedValidity)
+            => Schema(column, KendoGridTemplateColumn.Schema, expectedValidity);
 
 
         private void Schema(KendoGridColumnBase baseColumn, JSchema schema, bool expectedValidity)
