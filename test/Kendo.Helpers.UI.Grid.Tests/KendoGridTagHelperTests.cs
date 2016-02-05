@@ -102,8 +102,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     {
                         Columns = new KendoGridColumnBase[]
                         {
-                            new KendoGridFieldColumn() { Field = "Firstname" },
-                            new KendoGridFieldColumn() { Field = "Lastname" },
+                            new KendoGridFieldColumn {Field = "Firstname" },
+                            new KendoGridFieldColumn{Field = "Lastname" },
                             new KendoGridCommandColumn() { Name = "edit" }
                         }
                     },
@@ -116,8 +116,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.Attributes.ContainsName(KendoGridTagHelper.RoleAttributeName) && outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value is string && ((string)outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value) == "grid" &&
                         outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string
                         &&
-                            "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumn.FieldPropertyName]) 
-                            && "Lastname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridFieldColumn.FieldPropertyName])
+                            "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumnBase.FieldPropertyName]) 
+                            && "Lastname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridFieldColumnBase.FieldPropertyName])
                             && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2] is JObject
                             && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2].IsValid(KendoGridCommandColumn.Schema)
                             && JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[2]["command"] is JArray
@@ -125,29 +125,31 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     )
                 };
 
+                
+
+
+
                 yield return new object[]
                 {
                     new KendoGridTagHelper()
                     {
                         Columns = new KendoGridColumnBase[]
                         {
-                            new KendoGridFieldColumn() { Field = "Firstname" },
+                            new KendoGridFieldColumn{Field = "Firstname" },
                             new KendoGridTemplateColumn() { Template = "<button>Click me</button>" }
                         }
                     },
                     new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
                     new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
-                        outputTag.TagName == "div" &&
-                        outputTag.TagMode == TagMode.StartTagAndEndTag &&
-                        outputTag.Attributes.Count() == 2 &&
-                        outputTag.Attributes.ContainsName(KendoGridTagHelper.RoleAttributeName) && outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value is string && ((string)outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value) == "grid" &&
-                        outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string
+                        outputTag.TagName == "div" 
+                        && outputTag.TagMode == TagMode.StartTagAndEndTag 
+                        && outputTag.Attributes.Count() == 2 
+                        && outputTag.Attributes.ContainsName(KendoGridTagHelper.RoleAttributeName) && outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value is string && ((string)outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value) == "grid" 
+                        && outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string
                         
-                        && "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumn.FieldPropertyName])
+                        && "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumnBase.FieldPropertyName])
                         && "<button>Click me</button>".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridTemplateColumn.TemplatePropertyName])
-
-
                     )
                 };
 
@@ -157,7 +159,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     {
                         Columns = new KendoGridColumnBase[]
                         {
-                            new KendoGridFieldColumn() { Field = "Firstname" },
+                            new KendoGridFieldColumn{ Field = "Firstname" },
                             new KendoGridTemplateColumn() { Template = "<button>Click me</button>" }
                         }
                     },
@@ -170,13 +172,10 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         outputTag.Attributes.ContainsName(KendoGridTagHelper.RoleAttributeName) && outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value is string && ((string)outputTag.Attributes[KendoGridTagHelper.RoleAttributeName].Value) == "grid" &&
                         outputTag.Attributes.ContainsName("data-columns") && outputTag.Attributes["data-columns"].Value is string
 
-                        && "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumn.FieldPropertyName])
+                        && "Firstname".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[0][KendoGridFieldColumnBase.FieldPropertyName])
                         && "<button>Click me</button>".Equals((string)JArray.Parse((string)outputTag.Attributes["data-columns"].Value)[1][KendoGridTemplateColumn.TemplatePropertyName])
-
-
                     )
                 };
-
 
                 yield return new object[]
                 {

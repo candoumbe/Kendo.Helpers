@@ -14,7 +14,6 @@ namespace Kendo.Helpers.UI.Grid
     /// <summary>
     /// Tag helper suitable to build 
     /// </summary>
-    [HtmlTargetElement]
     public class KendoGridTagHelper : TagHelper
     {
         /// <summary>

@@ -3,7 +3,6 @@ using Kendo.Helpers.Data;
 
 namespace Kendo.Helpers.UI.AutoComplete
 {
-    [HtmlTargetElement("kendoAutoComplete", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class KendoAutoCompleteTagHelper : TagHelper
     {
         /// <summary>
@@ -39,6 +38,8 @@ namespace Kendo.Helpers.UI.AutoComplete
             output.Attributes[RoleAttributeName] = WidgetName;
 
             output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource?.ToJson();
+
+
         }
 
     }
