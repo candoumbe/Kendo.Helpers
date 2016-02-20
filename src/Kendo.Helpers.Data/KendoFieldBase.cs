@@ -39,14 +39,14 @@ namespace Kendo.Helpers.Data
 
        
 
-        protected KendoFieldBase(string name, FieldType fieldType)
+        protected KendoFieldBase(string fieldName, FieldType fieldType)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(fieldName))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"{nameof(name)} cannot be null or empty or whitespace");
+                throw new ArgumentOutOfRangeException(nameof(fieldName), $"{nameof(fieldName)} cannot be null or empty or whitespace");
             }
 
-            Name = name;
+            Name = fieldName;
             Type = fieldType;
         }
 
@@ -67,7 +67,7 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
+                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "date"},
                             [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
                             [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = 0 },
                             [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },

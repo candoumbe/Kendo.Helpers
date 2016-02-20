@@ -67,6 +67,11 @@ namespace Kendo.Helpers.UI.Grid
         /// </summary>
         public const string ColumnsPropertyName = "columns";
 
+        /// <summary>
+        /// Name of the json property that holds the "values" configuration
+        /// </summary>
+        public const string ValuesPropertyName = "values";
+
         public static JSchema Schema => new JSchema
         {
             Type = JSchemaType.Object,
@@ -83,11 +88,16 @@ namespace Kendo.Helpers.UI.Grid
                 [MinScreenWidthPropertyName] = new JSchema { Type = JSchemaType.Number },
                 [LockablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = true },
                 [TemplatePropertyName] = new JSchema { Type = JSchemaType.String },
-                [ColumnsPropertyName] = new JSchema { Type = JSchemaType.Array }
+                [ColumnsPropertyName] = new JSchema { Type = JSchemaType.Array },
+                [ValuesPropertyName] = new JSchema { Type = JSchemaType.Array }
             },
             AllowAdditionalProperties = false,
             MinimumProperties = 1
         };
+
+        [DataMember(Name = ValuesPropertyName, EmitDefaultValue = false)]
+        public IEnumerable<ColumnValues> Values { get; set; }
+
 
         [DataMember(Name = EncodedPropertyName, EmitDefaultValue = false)]
         public bool? Encoded { get; set; }

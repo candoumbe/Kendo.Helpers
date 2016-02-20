@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using GenFu;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System;
@@ -23,7 +22,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     new KendoGridFieldColumn {
                         Field = "Firstname"
                     },
-                    ((Expression<Func<string, bool>>) (json => 
+                    ((Expression<Func<string, bool>>) (json =>
                         "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName])
                     ))
                 };
@@ -66,7 +65,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     ))
                 };
 
-                
+
                 yield return new object[]
                 {
                     new KendoGridFieldColumn
@@ -89,7 +88,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         Format = "dd/MM/yyyy"
                     },
                     ((Expression<Func<string, bool>>) (json =>
-                        "Birthdate".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName]) 
+                        "Birthdate".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName])
                         && "Birth date".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.TitlePropertyName])
                         && "dd/MM/yyyy".Equals((string) JObject.Parse(json)[KendoGridFieldColumnBase.FormatPropertyName])
                     ))
@@ -136,7 +135,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                         Groupable = false
                     },
                     ((Expression<Func<string, bool>>)(json =>
-                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName]) 
+                       "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName])
                        && !(bool)JObject.Parse(json)[KendoGridFieldColumn.GroupablePropertyName]
                     ))
                 };
@@ -203,6 +202,23 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     ((Expression<Func<string, bool>>)(json =>
                        "Firstname".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName])
                        && (bool)JObject.Parse(json)[KendoGridFieldColumnBase.LockedPropertyName]
+                    ))
+                };
+
+                yield return new object[]
+                {
+                     new KendoGridFieldColumn() { Field = "Civility", Values = new [] {
+                                new ColumnValues(1, "M."),
+                                new ColumnValues(2, "Mme"),
+                            }
+                        },
+                     ((Expression<Func<string, bool>>)(json =>
+                       "Civility".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.FieldPropertyName])
+                       && "M.".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.ValuesPropertyName][0][ColumnValues.TextPropertyName])
+                       && 1.Equals((int)JObject.Parse(json)[KendoGridFieldColumnBase.ValuesPropertyName][0][ColumnValues.ValuePropertyName])
+
+                       && "Mme".Equals((string)JObject.Parse(json)[KendoGridFieldColumnBase.ValuesPropertyName][1][ColumnValues.TextPropertyName])
+                       && 2.Equals((int)JObject.Parse(json)[KendoGridFieldColumnBase.ValuesPropertyName][1][ColumnValues.ValuePropertyName])
                     ))
                 };
             }
@@ -440,6 +456,23 @@ namespace Kendo.Helpers.UI.Grid.Tests
                     },
                     true
                 };
+
+                yield return new object[]
+                {
+                     new KendoGridFieldColumn()
+                    {
+                        Title = "Fullname" ,
+                        Columns = new [] {
+                            new KendoGridFieldColumn{ Field = "firstname" },
+                            new KendoGridFieldColumn() { Field = "lastname" },
+                            new KendoGridFieldColumn() { Field = "Civiliy", Values = new [] {
+                                new ColumnValues (1, "M"),
+                                new ColumnValues (2, "Mme")
+                            } }
+                        }
+                    },
+                    true
+                };
             }
         }
 
@@ -457,7 +490,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
                 };
             }
         }
-        
+
         public static IEnumerable<object[]> TemplateColumnsSchemaCases
         {
             get
@@ -477,7 +510,7 @@ namespace Kendo.Helpers.UI.Grid.Tests
             }
 
         }
-        
+
         public static IEnumerable<object[]> CommandColumnsSchemaCases
         {
             get

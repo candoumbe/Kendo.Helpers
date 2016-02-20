@@ -20,15 +20,43 @@ namespace Kendo.Helpers.Data.Tests
                 yield return new object[]
                 {
                     new KendoStringField("Firstname"),
-                    ((Expression<Func<string, bool>>)(json => 
+                    ((Expression<Func<string, bool>>)(json =>
                         JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.String)) &&
                         nameof(FieldType.String).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                     ))
                 };
-                
+
             }
         }
 
+
+        public static IEnumerable<object[]> KendoNumericFieldToJsonCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new KendoNumericField("id"),
+                    ((Expression<Func<string, bool>>)(json =>
+                        nameof(FieldType.Number).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                    ))
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> KendoBooleanFieldToJsonCases
+        {
+            get
+            {
+                yield return new object[]
+               {
+                    new KendoBooleanField("active"),
+                    ((Expression<Func<string, bool>>)(json =>
+                        nameof(FieldType.Boolean).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                    ))
+               };
+            }
+        }
 
         public static IEnumerable<object[]> KendoDateFieldToJsonCases
         {
@@ -41,8 +69,8 @@ namespace Kendo.Helpers.Data.Tests
                             },
 
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) &&
-                        nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
+                        "23/06/1983".Equals((string) JObject.Parse(json)[KendoFieldBase.DefaultValuePropertyName])
+                        && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                     ))
                 };
 
@@ -52,7 +80,7 @@ namespace Kendo.Helpers.Data.Tests
                     new KendoDateField("BirthDate"),
 
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) 
+                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date))
                         && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                     ))
                 };
@@ -65,8 +93,8 @@ namespace Kendo.Helpers.Data.Tests
                             },
 
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.Date)) 
-                        && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName]) 
+                        "23/06/1983".Equals((string) JObject.Parse(json)[KendoFieldBase.DefaultValuePropertyName])
+                        && nameof(FieldType.Date).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                         && "item.birth_date".Equals((string) JObject.Parse(json)[KendoFieldBase.FromPropertyName])
                     ))
                 };
@@ -79,13 +107,11 @@ namespace Kendo.Helpers.Data.Tests
                         From = "item.firstname"
                     },
                     ((Expression<Func<string, bool>>)(json =>
-                        JObject.Parse(json).IsValid(KendoFieldBase.Schema(FieldType.String))
-                        && string.Empty == ((string) JObject.Parse(json)[KendoFieldBase.DefaultValuePropertyName])
+                        string.Empty == ((string) JObject.Parse(json)[KendoFieldBase.DefaultValuePropertyName])
                         && nameof(FieldType.String).ToLower().Equals((string) JObject.Parse(json)[KendoFieldBase.TypePropertyName])
                         && "item.firstname".Equals((string) JObject.Parse(json)[KendoFieldBase.FromPropertyName])
                     ))
                 };
-
             }
         }
 
@@ -101,7 +127,30 @@ namespace Kendo.Helpers.Data.Tests
             }
         }
 
-        
+        public static IEnumerable<object[]> KendoBooleanFieldSchemaCases
+        {
+            get
+            {
+
+                yield return new object[]
+                {
+                    new KendoBooleanField("active"), true
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> KendoNumericFieldSchemaCases
+        {
+            get
+            {
+
+                yield return new object[]
+                {
+                    new KendoNumericField("id"), true
+                };
+            }
+        }
+
 
         public static IEnumerable<object[]> KendoDateFieldSchemaCases
         {
@@ -126,17 +175,21 @@ namespace Kendo.Helpers.Data.Tests
         [Theory]
         [MemberData(nameof(KendoStringFieldToJsonCases))]
         [MemberData(nameof(KendoDateFieldToJsonCases))]
+        [MemberData(nameof(KendoNumericFieldToJsonCases))]
+        [MemberData(nameof(KendoBooleanFieldToJsonCases))]
         public void ToJson(KendoFieldBase kf, Expression<Func<string, bool>> jsonMatcher)
         {
             _output.WriteLine($"Testing : {kf}{Environment.NewLine} against {Environment.NewLine} {jsonMatcher} ");
             kf.ToJson().Should().Match(jsonMatcher);
         }
 
-        
+
 
         [Theory]
-        //[MemberData(nameof(KendoStringFieldSchemaCases))]
         [MemberData(nameof(KendoDateFieldSchemaCases))]
+        [MemberData(nameof(KendoStringFieldSchemaCases))]
+        [MemberData(nameof(KendoNumericFieldSchemaCases))]
+        [MemberData(nameof(KendoBooleanFieldSchemaCases))]
         public void Schema(KendoFieldBase kf, bool expectedValidity)
         {
             JSchema schema = KendoFieldBase.Schema(kf.Type);
