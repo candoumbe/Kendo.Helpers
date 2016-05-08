@@ -16,7 +16,7 @@ namespace Kendo.Helpers.UI.DatePicker
     ///     <code>
     ///         <kendoDatePicker max="new DateTime(2012, 12, 25)" >
     ///             
-    ///         /kendoDatePicker>
+    ///        </kendoDatePicker>
     ///     </code>
     /// </para>
     /// </summary>

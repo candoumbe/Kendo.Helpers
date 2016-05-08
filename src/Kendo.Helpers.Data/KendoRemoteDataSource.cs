@@ -26,6 +26,11 @@ namespace Kendo.Helpers.Data
         /// </summary>
         public const string PageSizePropertyName = "pageSize";
 
+        /// <summary>
+        /// Name of the json property that holds
+        /// </summary>
+        public const string ServerFilteringPropertyName = "serverFiltering";
+
         public static JSchema Schema => new JSchema
         {
             Type = JSchemaType.Object,
@@ -34,7 +39,8 @@ namespace Kendo.Helpers.Data
                 [TransportPropertyName] = KendoTransport.Schema,
                 [PagePropertyName] = new JSchema { Type = JSchemaType.Number, Minimum = 1 },
                 [PageSizePropertyName] = new JSchema { Type = JSchemaType.Number},
-                [SchemaPropertyName] = KendoSchema.Schema
+                [SchemaPropertyName] = KendoSchema.Schema,
+                [ServerFilteringPropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false }
             },
             Required = {TransportPropertyName},
             AllowAdditionalProperties = false
@@ -57,6 +63,10 @@ namespace Kendo.Helpers.Data
         /// </summary>
         [DataMember(Name = PagePropertyName, EmitDefaultValue = false)]
         public int? Page { get; set; }
+
+        [DataMember(Name = ServerFilteringPropertyName, EmitDefaultValue = false)]
+        public bool? ServerFiltering { get; set; }
+
 
         /// <summary>
         /// Gets/sets the "pageSize" configuration
@@ -87,6 +97,11 @@ namespace Kendo.Helpers.Data
             if (DataSchema != null)
             {
                 obj.Add(SchemaPropertyName, JObject.Parse(DataSchema.ToJson()));
+            }
+
+            if (ServerFiltering.HasValue)
+            {
+                obj.Add(ServerFilteringPropertyName, ServerFiltering.Value);
             }
 
 

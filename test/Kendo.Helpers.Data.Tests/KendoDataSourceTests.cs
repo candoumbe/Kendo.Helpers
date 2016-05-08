@@ -222,6 +222,42 @@ namespace Kendo.Helpers.Data.Tests
 
                     ))
                 };
+
+
+                yield return new object[] {
+                    new KendoRemoteDataSource() {
+                        Transport = new KendoTransport()
+                        {
+                            Read = new KendoTransportOperation()
+                            {
+                                Url = "api/resources/autocomplete"
+                            },
+                        },
+                        ServerFiltering = false
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                        "api/resources/autocomplete".Equals((string) JObject.Parse(json)[KendoRemoteDataSource.TransportPropertyName][KendoTransport.ReadPropertyName][KendoTransportOperation.UrlPropertyName]) &&
+                        !((bool) JObject.Parse(json)[KendoRemoteDataSource.ServerFilteringPropertyName])
+                     ))
+                };
+
+                yield return new object[] {
+                    new KendoRemoteDataSource() {
+                        Transport = new KendoTransport()
+                        {
+                            Read = new KendoTransportOperation()
+                            {
+                                Url = "api/resources/autocomplete"
+                            },
+                        },
+                        ServerFiltering = true
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                        "api/resources/autocomplete".Equals((string) JObject.Parse(json)[KendoRemoteDataSource.TransportPropertyName][KendoTransport.ReadPropertyName][KendoTransportOperation.UrlPropertyName]) &&
+                        ((bool) JObject.Parse(json)[KendoRemoteDataSource.ServerFilteringPropertyName])
+                     ))
+                };
+
             }
         }
 
