@@ -166,9 +166,9 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName($"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}") 
-                            && outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}"].Value is bool
-                            && !(bool)outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}"].Value
+                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.IgnoreCaseAttributeName) 
+                            && outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value is bool
+                            && !(bool)outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value
 
                     )
                 };
@@ -206,9 +206,9 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName($"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}")
-                            && outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}"].Value is bool
-                            && (bool)outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.IgnoreCaseAttributeName}"].Value
+                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.IgnoreCaseAttributeName)
+                            && outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value is bool
+                            && (bool)outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value
 
                     )
                 };
@@ -246,9 +246,9 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName($"data-{KendoAutoCompleteTagHelper.MinLengthAttributeName}")
-                            && outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.MinLengthAttributeName}"].Value is uint
-                            && 3 == (uint)outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.MinLengthAttributeName}"].Value
+                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.MinLengthAttributeName)
+                            && outputTag.Attributes[KendoAutoCompleteTagHelper.MinLengthAttributeName].Value is uint
+                            && 3 == (uint)outputTag.Attributes[KendoAutoCompleteTagHelper.MinLengthAttributeName].Value
 
                     )
                 };
@@ -393,9 +393,9 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName($"data-{KendoAutoCompleteTagHelper.PlaceholderAttributeName}")
-                            && outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.PlaceholderAttributeName}"].Value is string
-                            && "Enter a city name".Equals(outputTag.Attributes[$"data-{KendoAutoCompleteTagHelper.PlaceholderAttributeName}"].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.PlaceholderAttributeName)
+                            && outputTag.Attributes[KendoAutoCompleteTagHelper.PlaceholderAttributeName].Value is string
+                            && "Enter a city name".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.PlaceholderAttributeName].Value)
 
                     )
                 };

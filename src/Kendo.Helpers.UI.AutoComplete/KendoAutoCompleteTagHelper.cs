@@ -25,12 +25,12 @@ namespace Kendo.Helpers.UI.AutoComplete
         /// <summary>
         /// Name of the attribute to use to enable tag helper assistance to configure
         /// </summary>
-        public const string MinLengthAttributeName = "min-length";
+        public const string MinLengthAttributeName = "data-min-length";
 
         /// <summary>
         /// Name of the attribute which defines "ignore-case" behaviour
         /// </summary>
-        public const string IgnoreCaseAttributeName = "ignore-case";
+        public const string IgnoreCaseAttributeName = "data-ignore-case";
 
         /// <summary>
         /// Name of the widget
@@ -40,7 +40,7 @@ namespace Kendo.Helpers.UI.AutoComplete
         /// <summary>
         /// Name of the placeholder
         /// </summary>
-        public const string PlaceholderAttributeName = "placeholder";
+        public const string PlaceholderAttributeName = "data-placeholder";
 
         /// <summary>
         /// Gets/sets the <see cref="IKendoDataSource"/>
@@ -52,21 +52,18 @@ namespace Kendo.Helpers.UI.AutoComplete
         /// The minimum number of characters the user must type before a search is performed. 
         /// Set to higher value than 1 if the search could match a lot of items.
         /// </summary>
-        [HtmlAttributeName(MinLengthAttributeName)]
         public uint? MinLength { get; set; }
 
         /// <summary>
         /// If set to false case-sensitive search will be performed to find suggestions. 
         /// The widget performs case-insensitive searching by default.
         /// </summary>
-        [HtmlAttributeName(IgnoreCaseAttributeName)]
         public bool? IgnoreCase { get; set; }
 
 
         /// <summary>
         /// The hint displayed by the widget when it is empty. Not set by default.
         /// </summary>
-        [HtmlAttributeName(PlaceholderAttributeName)]
         public string Placeholder { get; set; }
 
 
@@ -81,16 +78,16 @@ namespace Kendo.Helpers.UI.AutoComplete
             output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource?.ToJson();
             if (MinLength.HasValue)
             {
-                output.Attributes.Add($"data-{MinLengthAttributeName}", MinLength.Value); 
+                output.Attributes.Add(MinLengthAttributeName, MinLength.Value); 
             }
             if (IgnoreCase.HasValue)
             {
-                output.Attributes.Add($"data-{IgnoreCaseAttributeName}", IgnoreCase.Value);
+                output.Attributes.Add(IgnoreCaseAttributeName, IgnoreCase.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(Placeholder))
             {
-                output.Attributes[$"data-{PlaceholderAttributeName}"] = Placeholder;
+                output.Attributes[PlaceholderAttributeName] = Placeholder;
             }
             
 
