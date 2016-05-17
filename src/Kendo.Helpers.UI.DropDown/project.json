@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.1.0-*",
   "description": "Kendo.Helpers.UI.DropDownList Class Library\nProvides a handy way to generate kendo tag helpers",
   "authors": [ "Cyrille NDOUMBE" ],
   "tags": [ "kendo", "kendoui", "helper", "taghelper", "dropdownlist", "dropdown" ],
@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "Microsoft.AspNet.Razor.Runtime": "4.0.0-rc1-final",
-    "Kendo.Helpers.Data": "1.5.0-*"
+    "Kendo.Helpers.Data": "2.0.0-beta-*"
   }
 }

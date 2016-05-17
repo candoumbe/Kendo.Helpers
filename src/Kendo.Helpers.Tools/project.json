@@ -1,20 +1,12 @@
-{
+﻿{
   "version": "1.0.0-*",
-  "description": "Kendo.Helpers.Data.Tests Class Library",
+  "description": "Kendo.Helpers.Tools Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
-  "tags": [ "" ],
+  "tags": [ "kendo", "kendoui" ],
   "projectUrl": "",
   "licenseUrl": "",
+
   "dependencies": {
-    "xunit": "2.1.0",
-    "xunit.runner.dnx": "2.1.0-rc1-*",
-    "xunit.runner.visualstudio": "2.1.0",
-    "FluentAssertions": "4.1.1",
-    "Kendo.Helpers.Data": "2.0.0-beta",
-    "Newtonsoft.Json.Schema": "2.0.1"
-  },
-  "commands": {
-    "test": "xunit.runner.dnx"
   },
 
   "frameworks": {

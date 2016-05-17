@@ -55,7 +55,7 @@ namespace Kendo.Helpers.Data
             if (Fields?.Any() ?? false)
             {
                 IEnumerable<JProperty> fieldsProperties = Fields
-                    ?.Select(item => new JProperty(item.Name, JObject.Parse(item.ToJson())))
+                    .Select(item => new JProperty(item.Name, JObject.Parse(item.ToJson())))
                     .ToArray() 
                     ?? Enumerable.Empty<JProperty>();
 
