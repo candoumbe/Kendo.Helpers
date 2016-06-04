@@ -6,6 +6,7 @@ using Newtonsoft.Json.Schema;
 using System.Linq.Expressions;
 using Xunit;
 using Xunit.Abstractions;
+using Kendo.Helpers.Data;
 
 namespace Kendo.Helpers.Data.Tests
 {

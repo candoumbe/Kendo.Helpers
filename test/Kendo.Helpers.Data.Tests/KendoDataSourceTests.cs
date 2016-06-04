@@ -1,14 +1,10 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNet.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Kendo.Helpers.Data;
 using Xunit;
 using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Schema.Generation;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 

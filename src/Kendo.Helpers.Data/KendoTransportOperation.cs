@@ -61,7 +61,7 @@ namespace Kendo.Helpers.Data
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets/Sets additional data that should be sent to the endpoint
+        /// Gets/Sets additional data that should be sent to the endpoint specified by <see cref="Url"/>
         /// </summary>
         [DataMember(Name = DataPropertyName, EmitDefaultValue = false)]
         public object Data { get; set; }
@@ -70,7 +70,7 @@ namespace Kendo.Helpers.Data
         public bool? Cache { get; set; }
 
         /// <summary>
-        /// Gets/Sets the content-type of the endpoint response
+        /// Gets/Sets the content-type of the endpoint response.
         /// </summary>
         [DataMember(Name = ContentTypePropertyName, EmitDefaultValue = false)]
         public string ContentType { get; set; }

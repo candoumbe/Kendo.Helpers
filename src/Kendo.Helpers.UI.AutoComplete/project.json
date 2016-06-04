@@ -1,24 +1,24 @@
 {
-  "version": "1.4.0-beta",
+  "version": "1.4.0-beta-01",
   "description": "Kendo.Helpers.UI.AutoComplete Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
-  "tags": [ "kendo", "kendoui", "helper", "taghelper", "autocomplete" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "packOptions": {
+    "tags": [ "kendo", "kendoui", "helper", "taghelper", "autocomplete" ],
+    "projectUrl": "https://github.com/candoumbe/Kendo.Helpers",
+    "licenseUrl": ""
+  },
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
-      }
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
     }
   },
   "dependencies": {
-    "Microsoft.AspNet.Razor.Runtime": "4.0.0-rc1-final",
-    "Kendo.Helpers.Data": "2.0.0-beta-*"
+    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-rc2-final",
+    "Kendo.Helpers.Data": "3.0.0-*",
+    "Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-rc2-final"
   }
 }

@@ -2,24 +2,24 @@
   "version": "1.1.0-alpha-01",
   "description": "Kendo.Helpers.Core Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
-  "tags": [ "Kendo", "TagHelper", "Kendo UI" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "packOptions": {
+    "tags": [ "kendo", "kendoui", "kendocore", "taghelper" ],
+    "projectUrl": "https://github.com/candoumbe/Kendo.Helpers",
+    "licenseUrl": ""
+  },
 
   "dependencies": {
-    "Newtonsoft.Json.Schema": "2.0.1"
+    "Newtonsoft.Json.Schema": "2.0.1",
+    "System.Runtime.InteropServices": "4.1.0-rc2-24027"
   },
 
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-*",
-        "System.Collections": "4.0.11-*",
-        "System.Linq": "4.0.1-*",
-        "System.Runtime": "4.0.21-*",
-        "System.Threading": "4.0.11-*"
-      }
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
     }
   }
 }

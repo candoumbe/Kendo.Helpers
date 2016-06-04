@@ -1,5 +1,5 @@
 ﻿using Kendo.Helpers.Data;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,14 +12,40 @@ using Xunit.Abstractions;
 using static Newtonsoft.Json.JsonConvert;
 using static Newtonsoft.Json.Formatting;
 using FluentAssertions;
+using static Kendo.Helpers.UI.Autocomplete.AutocompleteFilterType;
 
-namespace Kendo.Helpers.UI.AutoComplete.Tests
+namespace Kendo.Helpers.UI.Autocomplete.Tests
 {
     // This project can output the Class library as a NuGet Package.
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-    public class KendoAutoCompleteTagHelperTests
+    public class KendoAutocompleteTagHelperTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
+        private ITestOutputHelper _output;
+
+
+        public class Person
+        {
+            public string Firstname { get; set; }
+
+            public string Lastname { get; set; }
+
+            public DateTime BirthDate { get; set; }
+
+        }
+
+        public class SuperHero : Person
+        {
+            public string Nickname { get; set; }
+
+            public int Height { get; set; }
+
+            public Henchman Henchman { get; set; }
+        }
+
+        public class Henchman : SuperHero
+        {
+
+        }
 
 
         public static IEnumerable<object[]> ProcessCases
@@ -28,7 +54,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
             {
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoLocalDataSource<dynamic> {
                             Data = new dynamic[] {
                                 new { firstname = "bruce", lastname="wayne", city="Gotham" },
@@ -36,20 +62,20 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                             }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, htmlEncoder) => Task.FromResult((TagHelperContent) null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3 
                         
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.RoleAttributeName) 
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.RoleAttributeName) 
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
                         
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoLocalDataSource.Schema) &&
@@ -64,7 +90,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -78,18 +104,18 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                             }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
                         
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName) 
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string 
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName) 
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string 
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
                        
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName 
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName 
                         
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
@@ -99,7 +125,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -114,18 +140,18 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         IgnoreCase = null,
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
@@ -135,7 +161,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -150,32 +176,74 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         IgnoreCase = false,
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.IgnoreCaseAttributeName) 
-                            && outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value is bool
-                            && !(bool)outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.IgnoreCaseAttributeName) 
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value is bool
+                            && !(bool)outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value
 
                     )
                 };
 
+
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
+                        DataSource = new KendoRemoteDataSource
+                        {
+                            Transport = new KendoTransport
+                            {
+                                Read = new KendoTransportOperation
+                                {
+                                    Cache = false,
+                                    Url = "api/cities/",
+                                    Type = "GET"
+                                }
+                            }
+                        },
+                        IgnoreCase = false,
+                    },
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
+                        outputTag.TagName == "input" &&
+                        outputTag.TagMode == TagMode.SelfClosing &&
+                        outputTag.Attributes.Count() == 4
+
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
+
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
+
+                        && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
+                            JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
+
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.IgnoreCaseAttributeName)
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value is bool
+                            && !(bool)outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value
+
+                    )
+                };
+
+
+                yield return new object[]
+                {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -190,32 +258,32 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         IgnoreCase = true,
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.IgnoreCaseAttributeName)
-                            && outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value is bool
-                            && (bool)outputTag.Attributes[KendoAutoCompleteTagHelper.IgnoreCaseAttributeName].Value
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.IgnoreCaseAttributeName)
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value is bool
+                            && (bool)outputTag.Attributes[KendoAutocompleteTagHelper.IgnoreCaseAttributeName].Value
 
                     )
                 };
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -230,25 +298,25 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         MinLength = 3,
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.MinLengthAttributeName)
-                            && outputTag.Attributes[KendoAutoCompleteTagHelper.MinLengthAttributeName].Value is uint
-                            && 3 == (uint)outputTag.Attributes[KendoAutoCompleteTagHelper.MinLengthAttributeName].Value
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.MinLengthAttributeName)
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.MinLengthAttributeName].Value is uint
+                            && 3 == (uint)outputTag.Attributes[KendoAutocompleteTagHelper.MinLengthAttributeName].Value
 
                     )
                 };
@@ -256,7 +324,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -271,18 +339,18 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         Placeholder = "",
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
@@ -291,7 +359,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -306,18 +374,18 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         Placeholder = null,
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
@@ -327,7 +395,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -342,18 +410,18 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         Placeholder = "  ",
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
@@ -362,7 +430,7 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
 
                 yield return new object[]
                 {
-                    new KendoAutoCompleteTagHelper() {
+                    new KendoAutocompleteTagHelper() {
                         DataSource = new KendoRemoteDataSource
                         {
                             Transport = new KendoTransport
@@ -377,25 +445,71 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
                         },
                         Placeholder = "Enter a city name",
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoAutoComplete", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value is string
-                        && "text".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
 
-                        && ((string)outputTag.Attributes[KendoAutoCompleteTagHelper.RoleAttributeName].Value) == KendoAutoCompleteTagHelper.WidgetName
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
 
                         && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
                             JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
 
-                        && outputTag.Attributes.ContainsName(KendoAutoCompleteTagHelper.PlaceholderAttributeName)
-                            && outputTag.Attributes[KendoAutoCompleteTagHelper.PlaceholderAttributeName].Value is string
-                            && "Enter a city name".Equals(outputTag.Attributes[KendoAutoCompleteTagHelper.PlaceholderAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.PlaceholderAttributeName)
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value is string
+                            && "Enter a city name".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value)
+
+                    )
+                };
+
+                yield return new object[]
+                {
+                    new KendoAutocompleteTagHelper() {
+                        DataSource = new KendoRemoteDataSource
+                        {
+                            Transport = new KendoTransport
+                            {
+                                Read = new KendoTransportOperation
+                                {
+                                    Cache = false,
+                                    Url = "api/cities/",
+                                    Type = "GET"
+                                }
+                            }
+                        },
+                        Placeholder = "Enter a city name",
+                        Filter = StartsWith
+                    },
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendo-autocomplete", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
+                    (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
+                        outputTag.TagName == "input" &&
+                        outputTag.TagMode == TagMode.SelfClosing &&
+                        outputTag.Attributes.Count() == 4
+                        
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.RoleAttributeName) 
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value is string 
+                        && ((string)outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value) == KendoAutocompleteTagHelper.WidgetName
+
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value is string
+                        && "text".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.TypeAttributeName].Value)
+
+                        && outputTag.Attributes.ContainsName("data-source") && outputTag.Attributes["data-source"].Value is string &&
+                            JObject.Parse((string)outputTag.Attributes["data-source"].Value).IsValid(KendoRemoteDataSource.Schema)
+
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.PlaceholderAttributeName)
+                            && outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value is string
+                            && "Enter a city name".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value)
+
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.FilterAttributeName) && outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value is string &&
+                            nameof(StartsWith).ToLower().Equals((string)outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value)
 
                     )
                 };
@@ -403,21 +517,26 @@ namespace Kendo.Helpers.UI.AutoComplete.Tests
             }
         }
 
-        public KendoAutoCompleteTagHelperTests(ITestOutputHelper output)
+        public KendoAutocompleteTagHelperTests(ITestOutputHelper output)
         {
             _output = output;
 
         }
-
-
+        
         [Theory]
         [MemberData(nameof(ProcessCases))]
-        public void Process(KendoAutoCompleteTagHelper tagHelper, TagHelperContext context, TagHelperOutput output, Expression<Func<TagHelperOutput, bool>> outputMatcher)
+        public void Process(KendoAutocompleteTagHelper tagHelper, TagHelperContext context, TagHelperOutput output, Expression<Func<TagHelperOutput, bool>> outputMatcher)
         {
             _output.WriteLine(SerializeObject(tagHelper, Indented));
 
             tagHelper.Process(context, output);
             output.Should().Match(outputMatcher);
+        }
+
+
+        public void Dispose ()
+        {
+            _output = null;
         }
     }
 }

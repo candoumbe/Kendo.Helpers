@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using Kendo.Helpers.Data;
 
-namespace Kendo.Helpers.UI.DropDown
+namespace Kendo.Helpers.UI.Dropdownlist
 {
-    public class KendoDropDownListTagHelper : TagHelper
+    public class KendoDropdownlistTagHelper : TagHelper
     {
         /// <summary>
         /// Name of the data-attribute that defines the role of the widget
@@ -39,9 +35,9 @@ namespace Kendo.Helpers.UI.DropDown
 
             output.TagName = "input";
 
-            output.Attributes[RoleAttributeName] = WidgetName;
+            output.Attributes.Add(RoleAttributeName, WidgetName);
 
-            output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource?.ToJson();
+            output.Attributes.Add(DataSourceAttributeName.Substring(4), DataSource?.ToJson());
         }
 
     }

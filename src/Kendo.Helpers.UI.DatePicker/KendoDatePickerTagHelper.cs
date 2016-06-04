@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Kendo.Helpers.UI.DatePicker
+namespace Kendo.Helpers.UI.Datepicker
 {
     /// <summary>
     /// <para>
@@ -20,7 +17,7 @@ namespace Kendo.Helpers.UI.DatePicker
     ///     </code>
     /// </para>
     /// </summary>
-    public class KendoDatePickerTagHelper : TagHelper
+    public class KendoDatepickerTagHelper : TagHelper
     {
         /// <summary>
         /// Name of the data-attribute that defines the role of the widget
@@ -87,28 +84,27 @@ namespace Kendo.Helpers.UI.DatePicker
             output.TagName = "input";
             output.TagMode = TagMode.SelfClosing;
 
-            output.Attributes[RoleAttributeName] = WidgetName;
-            output.Attributes[TypeAttributeName] = "date";
+            output.Attributes.Add(RoleAttributeName, WidgetName) ;
+            output.Attributes.Add(TypeAttributeName, "date");
             if (Min.HasValue)
             {
-                output.Attributes[MinAttributeName] = Min?.ToString(DateOutputFormat);
+                output.Attributes.Add(MinAttributeName, Min?.ToString(DateOutputFormat));
             }
 
             if (Max.HasValue)
             {
-                output.Attributes[MaxAttributeName] = Max?.ToString(DateOutputFormat);
+                output.Attributes.Add(MaxAttributeName, Max?.ToString(DateOutputFormat));
             }
 
             if (Value.HasValue)
             {
-                output.Attributes[ValueAttributeName] = Value?.ToString(DateOutputFormat);
+                output.Attributes.Add(ValueAttributeName, Value?.ToString(DateOutputFormat));
             }
             if (Format != null)
             {
-                output.Attributes[FormatAttributeName] = Format;
+                output.Attributes.Add(FormatAttributeName, Format);
             }
 
-            //output.Content.SetContent(string.Empty);
             base.Process(context, output);
         }
 

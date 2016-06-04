@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp;
 using static System.Linq.Expressions.Expression;
+using static Kendo.Helpers.Data.KendoFilterOperator;
 
 namespace Kendo.Helpers.Data
 {
@@ -29,7 +30,7 @@ namespace Kendo.Helpers.Data
             {
                 KendoFilter kf = filter as KendoFilter;
                 Type type = typeof(T);
-                ParameterExpression pe = Parameter(type, "param");
+                ParameterExpression pe = Parameter(type, "item");
                 ConstantExpression constantExpression = Constant(kf.Value);
                 
                 string[] fields = kf.Field.Split(new []{'.'});
@@ -46,13 +47,13 @@ namespace Kendo.Helpers.Data
 
                 switch (kf.Operator)
                 {
-                    case KendoFilterOperator.NotEqualTo:
+                    case NotEqualTo:
                         body = NotEqual(property, constantExpression);
                         break;
-                    case KendoFilterOperator.IsNull:
+                    case IsNull:
                         body = Equal(property, Constant(null));
                         break;
-                    case KendoFilterOperator.IsNotNull:
+                    case IsNotNull:
                         body = NotEqual(property, Constant(null));
                         break;
                     case KendoFilterOperator.LessThan:
@@ -64,19 +65,19 @@ namespace Kendo.Helpers.Data
                     case KendoFilterOperator.GreaterThanOrEqual:
                         body = GreaterThanOrEqual(property, constantExpression);
                         break;
-                    case KendoFilterOperator.StartsWith:
+                    case StartsWith:
                         body = Call(property, typeof(string).GetMethod(nameof(string.StartsWith)), constantExpression);
                         break;
-                    case KendoFilterOperator.EndsWith:
+                    case EndsWith:
                         body = Call(property, typeof(string).GetMethod(nameof(string.EndsWith)), constantExpression);
                         break;
-                    case KendoFilterOperator.Contains:
+                    case Contains:
                         body = Call(property, typeof(string).GetMethod(nameof(string.Contains)), constantExpression);
                         break;
-                    case KendoFilterOperator.IsEmpty:
+                    case IsEmpty:
                         body = Equal(property, Constant(string.Empty));
                         break;
-                    case KendoFilterOperator.IsNotEmpty:
+                    case IsNotEmpty:
                         body = NotEqual(property, Constant(string.Empty));
                         break;
                     default:
@@ -89,9 +90,9 @@ namespace Kendo.Helpers.Data
             else if(filter is KendoCompositeFilter)
             {
                 KendoCompositeFilter kcf = filter as KendoCompositeFilter;
-
                 Expression<Func<T, bool>> expression = null;
                 Func<Expression<Func<T, bool>>, Expression<Func<T, bool>>, Expression<Func<T, bool>>> expressionMerger;
+
                 if (kcf.Logic == KendoFilterLogic.And)
                 {
                     expressionMerger = (first, second) => first.AndAlso(second);
@@ -103,18 +104,12 @@ namespace Kendo.Helpers.Data
 
                 foreach (IKendoFilter item in kcf.Filters)
                 {
-                    if (expression == null)
-                    {
-                        expression = item.ToExpression<T>();
-                    }
-                    else
-                    {
-                        expression = expressionMerger(expression, item.ToExpression<T>());
-                    }   
+                    expression = expression == null
+                        ? item.ToExpression<T>()
+                        : expressionMerger(expression, item.ToExpression<T>());  
                 }
 
                 filterExpression = expression;
-
             }
 
             return filterExpression;

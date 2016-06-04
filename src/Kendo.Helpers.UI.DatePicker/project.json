@@ -1,34 +1,23 @@
 {
-  "version": "1.1.0-beta-*",
-  "description": "Kendo.Helpers.UI.DatePicker Class Library",
+  "version": "1.2.0-beta-*",
+  "description": "Kendo.Helpers.UI.Datepicker Class Library",
   "authors": [ "Cyrille NDOUMBE" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "packOptions": {
+    "tags": [ "kendo", "kendoui", "helper", "taghelper", "datepicker" ],
+    "projectUrl": "https://github.com/candoumbe/Kendo.Helpers",
+    "licenseUrl": ""
+  },
   "frameworks": {
-    "dnx451": { },
-    "net451": { },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
-      }
-    },
-
-    "dotnet5.4": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
-      }
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
     }
   },
   "dependencies": {
-    "Microsoft.AspNet.Razor.Runtime": "4.0.0-rc1-final"
+    "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-rc2-final",
+    "System.Runtime.InteropServices": "4.1.0-rc2-24027"
   }
 }

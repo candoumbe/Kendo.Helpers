@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kendo.Helpers.Data;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
@@ -29,8 +29,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                 yield return new object[]
                 {
                     new KendoGridTagHelper(),
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag => 
                         outputTag.TagName == "div" && 
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
@@ -50,8 +50,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
@@ -78,8 +78,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             }
                         }
                     },
-                    new TagHelperContext(new [] { new TagHelperAttribute("class", "row")}, new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
@@ -107,8 +107,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             new KendoGridCommandColumn() { Name = "edit" }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
@@ -139,8 +139,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             new KendoGridTemplateColumn() { Template = "<button>Click me</button>" }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" 
                         && outputTag.TagMode == TagMode.StartTagAndEndTag 
@@ -163,8 +163,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             new KendoGridTemplateColumn() { Template = "<button>Click me</button>" }
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&
@@ -186,8 +186,8 @@ namespace Kendo.Helpers.UI.Grid.Tests
                             ButtonCount = 10
                         }
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoGrid", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "div" &&
                         outputTag.TagMode == TagMode.StartTagAndEndTag &&

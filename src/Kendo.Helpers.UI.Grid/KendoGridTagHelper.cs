@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using Microsoft.AspNet.Razor.TagHelpers;
-using static Newtonsoft.Json.JsonConvert;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Kendo.Helpers.Data;
-using System.Text;
 
 namespace Kendo.Helpers.UI.Grid
 {
@@ -62,15 +56,15 @@ namespace Kendo.Helpers.UI.Grid
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes[RoleAttributeName] = "grid";
+            output.Attributes.Add(RoleAttributeName, "grid");
             if (DataSource != null)
             {
-                output.Attributes[DataSourceAttributeName.Substring(4)] = DataSource.ToJson();
+                output.Attributes.Add(DataSourceAttributeName.Substring(4), DataSource.ToJson());
             }
 
             if (Columns?.Any() ?? false)
             {
-                output.Attributes[ColumnsAttributeName.Substring(4)] = Columns.ToJson();
+                output.Attributes.Add(ColumnsAttributeName.Substring(4), Columns.ToJson());
             }
            
 
@@ -81,7 +75,7 @@ namespace Kendo.Helpers.UI.Grid
 
             if (Pageable != null)
             {
-                output.Attributes[PageableAttributeName.Substring(4)] = Pageable.ToJson();
+                output.Attributes.Add(PageableAttributeName.Substring(4), Pageable.ToJson());
             }
         }
     }

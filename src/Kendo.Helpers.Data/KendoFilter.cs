@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 
 namespace Kendo.Helpers.Data
@@ -22,7 +19,7 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Name of the json property that holds the operator
         /// </summary>
-        public const string OperatorJsonPropertyName = "op";
+        public const string OperatorJsonPropertyName = "operator";
 
         /// <summary>
         /// Name of the json property that holds the value

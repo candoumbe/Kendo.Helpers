@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Kendo.Helpers.UI.DatePicker.Tests
+namespace Kendo.Helpers.UI.Datepicker.Tests
 {
     // This project can output the Class library as a NuGet Package.
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-    public class KendoDatePickerTagHelperTests
+    public class KendoDatepickerTagHelperTests
     {
         private readonly ITestOutputHelper _output;
 
-        public KendoDatePickerTagHelperTests(ITestOutputHelper output)
+        public KendoDatepickerTagHelperTests(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -27,80 +27,80 @@ namespace Kendo.Helpers.UI.DatePicker.Tests
             {
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() { },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new KendoDatepickerTagHelper() { },
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 2
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName) 
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string 
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName) 
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string 
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
                     )
                 };
 
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() {
+                    new KendoDatepickerTagHelper() {
                         Min = new DateTime(1983, 06, 23)
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.MinAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value is string
-                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.MinAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value is string
+                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value)
                     )
                 };
 
 
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() {
+                    new KendoDatepickerTagHelper() {
                         Min = new DateTime(1983, 06, 23),
                         Format = "dd/MM/yyyy"
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.MinAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value is string
-                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.MinAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value is string
+                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.FormatAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.FormatAttributeName].Value is string
-                        && "dd/MM/yyyy".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.FormatAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.FormatAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.FormatAttributeName].Value is string
+                        && "dd/MM/yyyy".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.FormatAttributeName].Value)
 
 
                     )
@@ -109,84 +109,84 @@ namespace Kendo.Helpers.UI.DatePicker.Tests
 
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() {
+                    new KendoDatepickerTagHelper() {
                         Value = new DateTime(1983, 06, 23)
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.ValueAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.ValueAttributeName].Value is string
-                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.ValueAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.ValueAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.ValueAttributeName].Value is string
+                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.ValueAttributeName].Value)
                     )
                 };
 
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() {
+                    new KendoDatepickerTagHelper() {
                         Max = new DateTime(1983, 06, 23)
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" 
                         && outputTag.TagMode == TagMode.SelfClosing 
                         && outputTag.Attributes.Count() == 3
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.MaxAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.MaxAttributeName].Value is string
-                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.MaxAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.MaxAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.MaxAttributeName].Value is string
+                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.MaxAttributeName].Value)
                     )
                 };
 
                 yield return new object[]
                 {
-                    new KendoDatePickerTagHelper() {
+                    new KendoDatepickerTagHelper() {
                         Max = new DateTime(1983, 06, 23),
                         Min = new DateTime(1980, 6, 23)
                     },
-                    new TagHelperContext(Enumerable.Empty<IReadOnlyTagHelperAttribute>(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
-                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  outputTag => Task.FromResult((TagHelperContent)null)),
+                    new TagHelperContext(new TagHelperAttributeList(), new Dictionary<object, object>(), Guid.NewGuid().ToString("n")),
+                    new TagHelperOutput("kendoDatePicker", new TagHelperAttributeList(),  (param1, param2) => Task.FromResult((TagHelperContent)null)),
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
                         outputTag.Attributes.Count() == 4
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.TypeAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value is string
-                        && "date".Equals(outputTag.Attributes[KendoDatePickerTagHelper.TypeAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.TypeAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value is string
+                        && "date".Equals(outputTag.Attributes[KendoDatepickerTagHelper.TypeAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.RoleAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value is string
-                        && ((string)outputTag.Attributes[KendoDatePickerTagHelper.RoleAttributeName].Value) == KendoDatePickerTagHelper.WidgetName
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.RoleAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value is string
+                        && ((string)outputTag.Attributes[KendoDatepickerTagHelper.RoleAttributeName].Value) == KendoDatepickerTagHelper.WidgetName
                         
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.MaxAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.MaxAttributeName].Value is string
-                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.MaxAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.MaxAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.MaxAttributeName].Value is string
+                        && "1983-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.MaxAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoDatePickerTagHelper.MinAttributeName)
-                        && outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value is string
-                        && "1980-06-23".Equals((string) outputTag.Attributes[KendoDatePickerTagHelper.MinAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoDatepickerTagHelper.MinAttributeName)
+                        && outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value is string
+                        && "1980-06-23".Equals((string) outputTag.Attributes[KendoDatepickerTagHelper.MinAttributeName].Value)
                     )
                 };
             }
