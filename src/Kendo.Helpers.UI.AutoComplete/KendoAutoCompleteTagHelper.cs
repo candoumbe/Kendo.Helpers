@@ -52,7 +52,7 @@ namespace Kendo.Helpers.UI.Autocomplete
         public const string PlaceholderAttributeName = "data-placeholder";
 
         /// <summary>
-        /// Name of the 
+        /// Name of the filter attribute
         /// </summary>
         public const string FilterAttributeName = "data-filter";
 

@@ -491,7 +491,7 @@ namespace Kendo.Helpers.UI.Autocomplete.Tests
                     (Expression<Func<TagHelperOutput, bool>>) (outputTag =>
                         outputTag.TagName == "input" &&
                         outputTag.TagMode == TagMode.SelfClosing &&
-                        outputTag.Attributes.Count() == 4
+                        outputTag.Attributes.Count() == 5
                         
                         && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.RoleAttributeName) 
                         && outputTag.Attributes[KendoAutocompleteTagHelper.RoleAttributeName].Value is string 
@@ -508,8 +508,9 @@ namespace Kendo.Helpers.UI.Autocomplete.Tests
                             && outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value is string
                             && "Enter a city name".Equals(outputTag.Attributes[KendoAutocompleteTagHelper.PlaceholderAttributeName].Value)
 
-                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.FilterAttributeName) && outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value is string &&
-                            nameof(StartsWith).ToLower().Equals((string)outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value)
+                        && outputTag.Attributes.ContainsName(KendoAutocompleteTagHelper.FilterAttributeName) 
+                        && outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value is string 
+                        && nameof(StartsWith).ToLower().Equals((string)outputTag.Attributes[KendoAutocompleteTagHelper.FilterAttributeName].Value)
 
                     )
                 };
