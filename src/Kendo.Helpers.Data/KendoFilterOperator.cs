@@ -28,6 +28,7 @@ namespace Kendo.Helpers.Data
         EndsWith,
         Contains,
         IsEmpty,
-        IsNotEmpty
+        IsNotEmpty,
+        LessThanOrEqualTo
     }
 }

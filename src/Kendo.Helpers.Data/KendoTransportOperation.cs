@@ -2,10 +2,11 @@
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
+    [JsonObject]
     public class KendoTransportOperation : IKendoObject
     {
         /// <summary>
@@ -45,43 +46,52 @@ namespace Kendo.Helpers.Data
                 [CachePropertyName] = new JSchema { Type = JSchemaType.Boolean },
                 [ContentTypePropertyName] = new JSchema { Type = JSchemaType.String, Default = "application/x-www-form-urlencoded" }
             },
-            Required = {UrlPropertyName}
+            Required = { UrlPropertyName },
+            AllowAdditionalProperties = false
         };
 
         /// <summary>
         /// Gets/Sets the url of the endpoint the datasource will get its date from
         /// </summary>
-        [DataMember(Name = UrlPropertyName, EmitDefaultValue = false, IsRequired = true)]
+        [JsonProperty(PropertyName = UrlPropertyName, Required = Required.Always)]
         public string Url { get; set; }
 
         /// <summary>
         /// Gets/Sets the type of the request
         /// </summary>
-        [DataMember(Name = TypePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TypePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets/Sets additional data that should be sent to the endpoint specified by <see cref="Url"/>
         /// </summary>
-        [DataMember(Name = DataPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = DataPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public object Data { get; set; }
 
-        [DataMember(Name = CachePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = CachePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public bool? Cache { get; set; }
 
         /// <summary>
         /// Gets/Sets the content-type of the endpoint response.
         /// </summary>
-        [DataMember(Name = ContentTypePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ContentTypePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string ContentType { get; set; }
-        
-
-        public override string ToString() => ToJson();
 
         /// <summary>
         /// Computes the Json representation of the current instance
         /// </summary>
         /// <returns>json representation of the current instance</returns>
-        public virtual string ToJson() => SerializeObject(this);
+        public virtual string ToJson()
+#if DEBUG
+        => SerializeObject(this, Formatting.Indented);
+#else
+        => SerializeObject(this);
+#endif
+
+
+#if DEBUG
+        public override string ToString() => ToJson(); 
+#endif
+
     }
 }

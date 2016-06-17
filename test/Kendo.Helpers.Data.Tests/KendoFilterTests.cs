@@ -183,6 +183,9 @@ namespace Kendo.Helpers.Data.Tests
             => Schema(filter, expectedValidity);
 
 
+
+
+
         private void Schema(IKendoFilter filter, bool expectedValidity)
         {
             JSchema schema = filter is KendoFilter

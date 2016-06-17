@@ -1,9 +1,11 @@
 ﻿using Kendo.Helpers.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
+using static Newtonsoft.Json.DefaultValueHandling;
 
-[DataContract]
+
+[JsonObject]
 public class PageableMessagesConfiguration : IKendoObject
 {
 
@@ -93,43 +95,50 @@ public class PageableMessagesConfiguration : IKendoObject
 
     };
 
-    [DataMember(Name = DisplayPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = DisplayPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Display { get; set; }
 
-    [DataMember(Name = EmptyPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = EmptyPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Empty { get; set; }
 
-    [DataMember(Name = RefreshPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = RefreshPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Refresh { get; set; }
 
-    [DataMember(Name = PagePropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = PagePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Page { get; set; }
 
-    [DataMember(Name = OfPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = OfPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Of { get; set; }
 
-    [DataMember(Name = ItemsPerPagePropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = ItemsPerPagePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string ItemsPerPage { get; set; }
 
-    [DataMember(Name = FirstPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = FirstPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string First { get; set; }
 
-    [DataMember(Name = LastPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = LastPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Last { get; set; }
 
-    [DataMember(Name = NextPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = NextPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Next { get; set; }
 
-    [DataMember(Name = PreviousPropertyName, EmitDefaultValue = false)]
+    [JsonProperty(PropertyName = PreviousPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
     public string Previous { get; set; }
 
-    [DataMember(Name = MorePagesPropertyName, EmitDefaultValue = false)]
-    public string MorePages{ get; set; }
+    [JsonProperty(PropertyName = MorePagesPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
+    public string MorePages { get; set; }
 
+
+#if DEBUG
     public override string ToString() => ToJson();
-    
+#endif
 
-    public string ToJson() => SerializeObject(this);
+    public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
 
 
 }

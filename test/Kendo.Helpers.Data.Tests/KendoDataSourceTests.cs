@@ -7,6 +7,7 @@ using Xunit;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.Data.Tests
 {
@@ -265,19 +266,32 @@ namespace Kendo.Helpers.Data.Tests
 
 
         [Theory]
-        [MemberData(nameof(RemoteDataSourceToJsonCases))]
         [MemberData(nameof(LocalDataSourceToJsonCases))]
-        public void ToJson(IKendoDataSource dataSource, Expression<Func<string, bool>> jsonMatcher)
+        public void ToJson(KendoLocalDataSource dataSource, Expression<Func<string, bool>> jsonMatcher)
+            => ToJson((IKendoDataSource)dataSource, jsonMatcher);
+
+        [Theory]
+        [MemberData(nameof(RemoteDataSourceToJsonCases))]
+        public void ToJson(KendoRemoteDataSource dataSource, Expression<Func<string, bool>> jsonMatcher)
+            => ToJson((IKendoDataSource)dataSource, jsonMatcher);
+
+
+        private void ToJson(IKendoDataSource dataSource, Expression<Func<string, bool>> jsonMatcher)
         {
             _output.WriteLine($"Testing {Environment.NewLine} {dataSource} {Environment.NewLine} against {Environment.NewLine} {jsonMatcher}");
-            dataSource.ToJson().Should().Match(jsonMatcher);
+            string json = dataSource.ToJson();
+            json.Should().Match(jsonMatcher);
+
         }
+
+        
 
         [Theory]
         [MemberData(nameof(LocalDataSourceSchemaCases))]
         public void LocalDataSourceSchema(IKendoDataSource dataSource, bool expectedValidity)
         {
             _output.WriteLine($"Validating {dataSource} against {KendoLocalDataSource.Schema}");
+
             JObject.Parse(dataSource.ToJson()).IsValid(KendoLocalDataSource.Schema)
               .Should().Be(expectedValidity);
         }

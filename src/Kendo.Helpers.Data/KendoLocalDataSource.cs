@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
+    [JsonObject]
     public class KendoLocalDataSource : KendoLocalDataSource<object>
     {
         
     }
 
-    [DataContract]
+    [JsonObject]
     public class KendoLocalDataSource<T> : IKendoDataSource 
     {
         /// <summary>
@@ -42,17 +43,22 @@ namespace Kendo.Helpers.Data
             Required = {DataPropertyName}
         };
 
-        [DataMember(Name = PageSizePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = PageSizePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public int? PageSize { get; set; }
 
-        [DataMember(Name = PagePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = PagePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public int? Page { get; set; }
 
-        [DataMember(Name = DataPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = DataPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public IEnumerable<T> Data { get; set; }
 
 
-        public string ToJson() => SerializeObject(this);
+        public string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
 
         public override string ToString() => ToJson();
     }

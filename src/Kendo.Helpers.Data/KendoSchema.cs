@@ -3,22 +3,35 @@ using System.Text;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
 
-using System.Diagnostics;
-
+using static Newtonsoft.Json.JsonConvert;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Kendo.Helpers.Data.Converters;
 
 namespace Kendo.Helpers.Data
 {
     /// <summary>
     /// An instance of this class allows to customize the schema configuration of a <see cref="KendoRemoteDataSource"/>
     /// </summary>
-    [DataContract]
+    [JsonObject]
     public class KendoSchema : IKendoObject
     {
-
+        /// <summary>
+        /// Name of the json property that holds the "data" property name
+        /// </summary>
         public const string DataPropertyName = "data";
+        /// <summary>
+        /// Name of the json property that holds the "total" property
+        /// </summary>
         public const string TotalPropertyName = "total";
+        /// <summary>
+        /// Name of the json property that holds the "type" property
+        /// </summary>
         public const string TypePropertyName = "type";
+        /// <summary>
+        /// Name of the json property that holds the "model" property
+        /// </summary>
         public const string ModelPropertyName = "model";
 
 
@@ -38,7 +51,7 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Gets/Sets the data configuration (see http://docs.telerik.com/kendo-ui/api/javascript/data/datasource#configuration-schema.data).
         /// </summary>
-        [DataMember(Name = "data", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = DataPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Data { get; set; }
 
         /// <summary>
@@ -46,7 +59,7 @@ namespace Kendo.Helpers.Data
         /// Gets/Sets the field of the server which holds the total number of data items in the response.
         /// </para>
         /// </summary>
-        [DataMember(Name = "total", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TotalPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Total { get; set; }
 
         /// <summary>
@@ -54,41 +67,24 @@ namespace Kendo.Helpers.Data
         /// Gets/Sets the type of the server response. Can be either "json" or "xml"
         /// </para>
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TypePropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(SchemaTypeConverter))]
         public SchemaType? Type { get; set; }
 
-        [DataMember(Name = "model",  EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ModelPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public KendoModel Model { get; set; }
 
         public string ToJson()
-        {
-            StringBuilder json = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(Data))
-            {
-                json = json.Append($@"""data"":""{Data}""");
-            }
-            if (!string.IsNullOrWhiteSpace(Total))
-            {
-                json = json
-                    .Append($"{(json.Length > 0 ? "," : string.Empty)}")
-                    .Append($@"""total"":""{Total}""");
-            }
-            if (Type.HasValue)
-            {
-                json = json
-                    .Append($"{(json.Length > 0 ? "," : string.Empty)}")
-                    .Append($@"""type"":""{(Type == SchemaType.Json ? "json" : "xml")}""");
-            }
-            if (Model != null)
-            {
-                json = json
-                    .Append($"{(json.Length > 0 ? "," : string.Empty)}")
-                    .Append($@"""model"":{Model.ToJson()}");
-            }
-            json = json.Insert(0, "{").Append("}");
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
 
-            Debug.Assert(JObject.Parse(json.ToString()).IsValid(Schema), $"json obtained from {nameof(ToJson)} should conform to the schema : {Schema}");
-            return json.ToString();
-        }
+
+#if DEBUG
+        public override string ToString() => ToJson();
+#endif
     }
+
 }

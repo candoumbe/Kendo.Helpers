@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json.Schema;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public class KendoGridCommandColumn : KendoGridColumnBase
     {
         
@@ -38,17 +37,25 @@ namespace Kendo.Helpers.UI.Grid
         /// <summary>
         /// Gets/Sets the name of the command
         /// </summary>
-        [DataMember(Name = NamePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = NamePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets/Sets the text associated to the command
         /// </summary>
-        [DataMember(Name = TextPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TextPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string Text { get; set; }
 
-        public override string ToJson() => SerializeObject(this);
-
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
+
+        public override string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
     }
 }

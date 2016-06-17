@@ -1,12 +1,11 @@
 ﻿using Kendo.Helpers.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
-using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public class GridFilterableConfiguration : IKendoObject
     {
         /// <summary>
@@ -22,13 +21,13 @@ namespace Kendo.Helpers.UI.Grid
         /// <summary>
         /// Gets/Sets the Filterable mode
         /// </summary>
-        [DataMember(Name = ModePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ModePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public GridFilterableMode? Mode { get; set; }
 
         /// <summary>
         /// Gets/sets if the filter menu allows the user to input a second criterion
         /// </summary>
-        [DataMember(Name = ExtraPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ExtraPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public bool? Extra { get; set; }
 
         public static JSchema Schema => new JSchema()

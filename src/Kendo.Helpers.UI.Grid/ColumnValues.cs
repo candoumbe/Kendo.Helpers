@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Core;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.UI.Grid
 {
     /// <summary>
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
-    [DataContract]
+    [JsonObject]
     public class ColumnValues : IKendoObject
     {
         /// <summary>
@@ -29,7 +29,9 @@ namespace Kendo.Helpers.UI.Grid
             Value = value;
         }
 
-
+        /// <summary>
+        /// The schema that describes the json representation of this element
+        /// </summary>
         public static JSchema Schema => new JSchema
         {
             Properties =
@@ -43,15 +45,22 @@ namespace Kendo.Helpers.UI.Grid
         };
 
 
-        [DataMember(Name = ValuePropertyName)]
+        [JsonProperty(PropertyName = ValuePropertyName)]
         public object Value { get; set; }
 
-        [DataMember(Name = TextPropertyName)]
+        [JsonProperty(PropertyName = TextPropertyName)]
         public string Text { get; set; }
 
-        public string ToJson() => SerializeObject(this);
-
-
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
+
+        public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
     }
 }

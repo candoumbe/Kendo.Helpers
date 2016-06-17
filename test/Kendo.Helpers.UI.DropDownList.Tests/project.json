@@ -6,9 +6,9 @@
   "dependencies": {
     "xunit": "2.1.0",
     "dotnet-test-xunit": "1.0.0-rc2-build10025",
-    "FluentAssertions": "4.6.3",
-    "Kendo.Helpers.UI.DropDown": "1.2.0-*",
-    "Newtonsoft.Json.Schema": "2.0.1"
+    "FluentAssertions": "4.7.0",
+    "Newtonsoft.Json.Schema": "2.0.2",
+    "Kendo.Helpers.UI.Dropdownlist": "1.2.0-*"
   },
   
 
@@ -19,7 +19,6 @@
           "type": "platform",
           "version": "1.0.0-rc2-3002702"
         }
-
       },
       "imports": [
         "dnxcore50",

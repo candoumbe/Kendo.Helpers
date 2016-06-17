@@ -1,11 +1,12 @@
 ﻿using Kendo.Helpers.Core;
 using Kendo.Helpers.UI.Grid;
-using Newtonsoft.Json.Schema;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
 
 namespace Kendo.Helpers.UI.Grid
 {
+    [JsonObject]
     public abstract class KendoGridColumnBase : IKendoObject
     {
         

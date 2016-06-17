@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json.Schema;
-using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
+using static Newtonsoft.Json.DefaultValueHandling;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public abstract class KendoGridFieldColumnBase : KendoGridColumnBase
     {
 
@@ -95,81 +95,90 @@ namespace Kendo.Helpers.UI.Grid
             MinimumProperties = 1
         };
 
-        [DataMember(Name = ValuesPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ValuesPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public IEnumerable<ColumnValues> Values { get; set; }
 
 
-        [DataMember(Name = EncodedPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = EncodedPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Encoded { get; set; }
 
         /// <summary>
         /// Gets/sets the format of the column
         /// </summary>
-        [DataMember(Name = FormatPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = FormatPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public string Format { get; set; }
 
         /// <summary>
         /// Gets/sets the field the column will represents
         /// </summary>
-        [DataMember(Name = FieldPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = FieldPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public string Field { get; set; }
         /// <summary>
         /// Gets/Sets the title of the column.
         /// </summary>
-        [DataMember(Name = TitlePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TitlePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public string Title{ get; set; }
 
         /// <summary>
         /// Gets/sets if the column is groupable
         /// </summary>
-        [DataMember(Name = GroupablePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = GroupablePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Groupable { get; set; }
 
         /// <summary>
         /// Gets/sets if the column is hidden
         /// </summary>
-        [DataMember(Name = HiddenPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = HiddenPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Hidden { get; set; }
 
         /// <summary>
         /// Gets/sets if the column is locked.
         /// </summary>
-        [DataMember(Name = LockedPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = LockedPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Locked { get; set; }
 
 
         /// <summary>
         /// Gets/sets if the column is lockable.
         /// </summary>
-        [DataMember(Name = LockablePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = LockablePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Lockable { get; set; }
 
         /// <summary>
         /// Gets/sets the screen width under which the column will not be displayed.
         /// </summary>
-        [DataMember(Name = MinScreenWidthPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = MinScreenWidthPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public int? MinScreenWidth { get; set; }
 
 
         /// <summary>
         /// Gets/sets additional CSS attributes for the current column.
         /// </summary>
-        [DataMember(Name = AttributesPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = AttributesPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public IDictionary<string, object> Attributes { get; set; }
 
         /// <summary>
         /// Gets/sets subcolumns of the current column
         /// </summary>
-        [DataMember(Name = ColumnsPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ColumnsPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public IEnumerable<KendoGridFieldColumn> Columns { get; set; }
 
         /// <summary>
         /// Gets/sets the template used to render the value of the column
         /// </summary>
-        [DataMember(Name = TemplatePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = TemplatePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public string Template { get; set; }
 
+#if DEBUG
+        public override string ToString() => ToJson();
+#endif
+
         public override string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
             => SerializeObject(this);
+#endif
+
     }
 }

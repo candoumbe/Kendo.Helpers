@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace Kendo.Helpers.Data.Tests
 {
+
     public class KendoModelTests
     {
         private readonly ITestOutputHelper _output;
@@ -23,7 +24,6 @@ namespace Kendo.Helpers.Data.Tests
                 {
                     new KendoModel(), false
                 };
-
 
                 yield return new object[]
                 {
@@ -110,8 +110,8 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string, bool>>)(json =>
-                        "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName]) 
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["Firstname"].IsValid(KendoFieldBase.Schema(FieldType.String))
+                        "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
+                        && JObject.Parse(json)[KendoModel.FieldsPropertyName].Type == JTokenType.Object
                     ))
                 };
 
@@ -122,13 +122,13 @@ namespace Kendo.Helpers.Data.Tests
                         Id = "Id",
                         Fields = new KendoFieldBase[]
                         {
-                            new KendoDateField("BirthDate"),
+                            new KendoDateField("BirthDate")
                         }
                     },
                     ((Expression<Func<string, bool>>)(json =>
                         "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["BirthDate"].IsValid(KendoFieldBase.Schema(FieldType.Date))
-                    ))
+                        && JObject.Parse(json)[KendoModel.FieldsPropertyName].Type == JTokenType.Object)
+                    )
                 };
 
                 yield return new object[]
@@ -140,14 +140,13 @@ namespace Kendo.Helpers.Data.Tests
                         {
                             new KendoDateField("BirthDate") {
                                 DefaultValue = new DateTime(1983, 6, 23).ToString("dd/MM/yyyy")
-                            },
-
+                            }
                         }
                     },
                     ((Expression<Func<string, bool>>)(json => 
                         "Id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["BirthDate"].IsValid(KendoFieldBase.Schema(FieldType.Date))
-                    ))
+                        && JObject.Parse(json)[KendoModel.FieldsPropertyName].Type == JTokenType.Object)
+                    )
                 };
 
 
@@ -166,20 +165,8 @@ namespace Kendo.Helpers.Data.Tests
 
                     ((Expression<Func<string, bool>>)(json =>
                         "item.id".Equals((string) JObject.Parse(json)[KendoModel.IdPropertyName])
-                        
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.firstname"].IsValid(KendoFieldBase.Schema(FieldType.String)) 
-                        && nameof(FieldType.String).ToLower().Equals(JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.firstname"][KendoFieldBase.TypePropertyName].Value<string>())
-                        
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.lastname"].IsValid(KendoFieldBase.Schema(FieldType.String))
-                        && nameof(FieldType.String).ToLower().Equals(JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.lastname"][KendoFieldBase.TypePropertyName].Value<string>())
-                        
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.birth_date"].IsValid(KendoFieldBase.Schema(FieldType.Date))
-                        && nameof(FieldType.Date).ToLower().Equals(JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.birth_date"][KendoFieldBase.TypePropertyName].Value<string>())
-                        
-                        && JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.birth_place"].IsValid(KendoFieldBase.Schema(FieldType.String))
-                        && nameof(FieldType.String).ToLower().Equals(JObject.Parse(json)[KendoModel.FieldsPropertyName]["item.birth_place"][KendoFieldBase.TypePropertyName].Value<string>())
-
-                    ))
+                        && JObject.Parse(json)[KendoModel.FieldsPropertyName].Type == JTokenType.Object)
+                    )
                 };
             }
         }

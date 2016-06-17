@@ -1,12 +1,12 @@
 ﻿using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Data;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public class FieldColumnFilterableConfiguration : IKendoObject
     {
 
@@ -27,13 +27,23 @@ namespace Kendo.Helpers.UI.Grid
             }
         };
 
-        [DataMember(Name = DataSourcePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = DataSourcePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public IKendoDataSource DataSource { get; set; }
 
-        [DataMember(Name = MultiPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = MultiPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public bool? Multi { get; set; }
 
 
-        public string ToJson() => SerializeObject(this);
+#if DEBUG
+        public override string ToString() => ToJson();
+#endif
+
+        public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
     }
 }

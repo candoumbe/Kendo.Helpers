@@ -9,7 +9,7 @@
   },
 
   "dependencies": {
-    "Newtonsoft.Json.Schema": "2.0.1",
+    "Newtonsoft.Json.Schema": "2.0.2",
     "System.Runtime.InteropServices": "4.1.0-rc2-24027"
   },
 

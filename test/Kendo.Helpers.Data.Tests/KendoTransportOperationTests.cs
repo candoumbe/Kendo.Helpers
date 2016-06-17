@@ -62,15 +62,7 @@ namespace Kendo.Helpers.Data.Tests
         {
             get
             {
-                yield return new object[]
-                {
-                    new KendoTransportOperation(), false
-                };
-                yield return new object[]
-                {
-                    new KendoTransportOperation() { Cache = false}, false
-                };
-
+                
                 yield return new object[]
                 {
                     new KendoTransportOperation()

@@ -6,9 +6,9 @@
   "dependencies": {
     "xunit": "2.1.0",
     "dotnet-test-xunit": "1.0.0-rc2-build10025",
-    "FluentAssertions": "4.6.3",
-    "Kendo.Helpers.UI.Grid": "2.2.1-*",
-    "Newtonsoft.Json.Schema": "2.0.1"
+    "FluentAssertions": "4.7.0",
+    "Kendo.Helpers.UI.Grid": "2.3.0-beta",
+    "Newtonsoft.Json.Schema": "2.0.2"
   },
   
   "frameworks": {

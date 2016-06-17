@@ -1,16 +1,18 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Runtime.Serialization;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
-using System.Collections.Generic;
-using System.Diagnostics;
+using static Newtonsoft.Json.JsonConvert;
+using Kendo.Helpers.Data.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
+    /// <summary>
+    /// Base class for the kendo fields.
+    /// </summary>
+    [JsonObject]
+    [JsonConverter(typeof(KendoFieldConverter))]
     public abstract class KendoFieldBase : IKendoObject
     {
         /// <summary>
@@ -37,8 +39,12 @@ namespace Kendo.Helpers.Data
         /// </summary>
         public const string FromPropertyName = "from";
 
-       
 
+        /// <summary>
+        /// Builds a new <see cref="KendoFieldBase"/> instance
+        /// </summary>
+        /// <param name="fieldName">name of the field</param>
+        /// <param name="fieldType">Type of the field</param>
         protected KendoFieldBase(string fieldName, FieldType fieldType)
         {
             if (string.IsNullOrWhiteSpace(fieldName))
@@ -53,28 +59,35 @@ namespace Kendo.Helpers.Data
 
         /// <summary>
         /// Gets the schema that validates the current field
+        /// <param name="name">Name of the field to validate</param>
+        /// <param name="fieldType">Type of the field to validate</param>
+        /// <see cref="FieldType"/>
         /// </summary>
-        public static JSchema Schema(FieldType fieldType)
+        public static JSchema Schema(string name, FieldType fieldType)
         {
-
-            
             JSchema schema;
             switch (fieldType)
             {
                 case FieldType.Date:
-                    schema = new JSchema()
+                    schema = new JSchema
                     {
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "date"},
-                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = 0 },
-                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
-                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
-
+                            [name] = new JSchema {
+                                Type = JSchemaType.Object,
+                                Properties = {
+                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "date"},
+                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = "new Date()" },
+                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                                    [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                                },
+                                Required = { TypePropertyName },
+                                AllowAdditionalProperties = false
+                            }
                         },
-                        Required = { TypePropertyName },
+                        Required = { name },
                         AllowAdditionalProperties = false
                     };
                     break;
@@ -84,46 +97,67 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
-                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Number, Default = 0 },
-                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
-                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                            [name] = new JSchema {
+                                Type = JSchemaType.Object,
+                                Properties = {
+                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "number"},
+                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Number, Default = 0 },
+                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                                    [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                                },
+                                Required = { TypePropertyName },
+                                AllowAdditionalProperties = false
+                            }
                         },
-                        Required = { TypePropertyName },
+                        Required = { name },
                         AllowAdditionalProperties = false
                     };
                     break;
                 case FieldType.Boolean:
-                    schema = new JSchema()
+                    schema = new JSchema
                     {
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "boolean"},
-                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Boolean },
-                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
-                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                            [name] = new JSchema {
+                                Type = JSchemaType.Object,
+                                Properties =
+                                {
+                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "boolean"},
+                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.Boolean },
+                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                                    [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                                },
+                                Required = { TypePropertyName },
+                                AllowAdditionalProperties = false
+                            }
                         },
-                        Required = {TypePropertyName},
+                        Required = { name },
                         AllowAdditionalProperties = false
-
                     };
                     break;
                 default:
-                    schema = new JSchema()
+                    schema = new JSchema
                     {
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "string"},
-                            [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
-                            [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = string.Empty },
-                            [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
-                            [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                            [name] = new JSchema {
+                                Type = JSchemaType.Object,
+                                Properties = {
+                                    [TypePropertyName] = new JSchema {Type = JSchemaType.String, Default = "string"},
+                                    [EditablePropertyName] = new JSchema {Type = JSchemaType.Boolean, Default = true},
+                                    [DefaultValuePropertyName] = new JSchema() { Type = JSchemaType.String, Default = string.Empty },
+                                    [NullablePropertyName] = new JSchema { Type = JSchemaType.Boolean, Default = false },
+                                    [FromPropertyName] = new JSchema {Type = JSchemaType.String }
+                                },
+                                Required = { TypePropertyName },
+                                AllowAdditionalProperties = false
+                            }
                         },
-                        Required = {TypePropertyName},
+                        Required = { name },
                         AllowAdditionalProperties = false
                     };
                     break;
@@ -132,78 +166,53 @@ namespace Kendo.Helpers.Data
             return schema;
         }
 
-        [DataMember(Name = DefaultValuePropertyName, EmitDefaultValue = false)]
+        /// <summary>
+        /// Default value of the field
+        /// </summary>
+        [JsonProperty(PropertyName = DefaultValuePropertyName)]
         public object DefaultValue { get; set; }
 
-
+        /// <summary>
+        /// Name of the field
+        /// </summary>
+        [JsonIgnore]
         public string Name { get; }
 
-        [DataMember(Name = TypePropertyName, EmitDefaultValue = false)]
+        /// <summary>
+        /// Gets/sets the type of the field
+        /// </summary>
+        [JsonProperty(PropertyName = TypePropertyName)]
         public FieldType Type { get; }
 
         /// <summary>
         /// Gets/sets if the field can be edited
         /// </summary>
-        [DataMember(Name = EditablePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = EditablePropertyName)]
         public bool? Editable { get; set; }
 
         /// <summary>
         /// Gets/sets if the field can be set to null
         /// </summary>
-        [DataMember(Name = NullablePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = NullablePropertyName)]
         public bool? Nullable { get; set; }
 
         /// <summary>
         /// Gets/sets the name of the backing item
         /// </summary>
-        [DataMember(Name = FromPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = FromPropertyName)]
         public string From { get; set; }
 
-        
         public virtual string ToJson()
-        {
-            JObject properties = new JObject();
-            switch (Type)
-            {
-                case FieldType.Date:
-                    properties.Add(TypePropertyName, nameof(FieldType.Date).ToLower());
-                    break;
-                case FieldType.Number:
-                    properties.Add(TypePropertyName, nameof(FieldType.Number).ToLower());
-                    break;
-                case FieldType.Boolean:
-                    properties.Add(TypePropertyName, nameof(FieldType.Boolean).ToLower());
-                    break;
-                default:
-                    properties.Add(TypePropertyName, nameof(FieldType.String).ToLower());
-                    break;
-            }
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
 
-            if (DefaultValue != null)
-            {
-                properties.Add(DefaultValuePropertyName, JToken.FromObject(DefaultValue));
-            }
 
-            if (Editable.HasValue)
-            {
-                properties.Add(EditablePropertyName, Editable.Value);
-            }
-
-            if (Nullable.HasValue)
-            {
-                properties.Add(NullablePropertyName, Nullable.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(From))
-            {
-                properties.Add(FromPropertyName, From);
-            }
-           
-            
-            return properties.ToString();
-
-        }
-
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
+
     }
 }

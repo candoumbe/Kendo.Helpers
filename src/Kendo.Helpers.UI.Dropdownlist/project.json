@@ -1,9 +1,9 @@
 {
   "version": "1.2.0-*",
-  "description": "Kendo.Helpers.UI.DropDownList Class Library\nProvides a handy way to generate kendo tag helpers",
+  "description": "Kendo.Helpers.UI.DropDownList Class Library\nProvides a handy way to generate kendo dropdownlist using data-attributes",
   "authors": [ "Cyrille NDOUMBE" ],
   "packOptions": {
-    "tags": [ "kendo", "kendoui", "helper", "taghelper", "dropdownlist", "dropdown" ],
+    "tags": [ "kendo", "kendoui", "helper", "taghelper", "dropdownlist"],
     "projectUrl": "https://github.com/candoumbe/Kendo.Helpers",
     "licenseUrl": ""
   },
@@ -17,6 +17,6 @@
     }
   },
   "dependencies": {
-    "Kendo.Helpers.Data": "2.0.0-*"
+    "Kendo.Helpers.Data": "3.0.0-beta"
   }
 }

@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
+using static Newtonsoft.Json.JsonConvert;
+using System.Runtime.Serialization;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using Kendo.Helpers.Data.Converters;
 
 namespace Kendo.Helpers.Data
 {
@@ -41,7 +44,7 @@ namespace Kendo.Helpers.Data
                         Type = JSchemaType.Object,
                         Properties =
                         {
-                            [FieldJsonPropertyName] = new JSchema { Type = JSchemaType.String,  },
+                            [FieldJsonPropertyName] = new JSchema { Type = JSchemaType.String },
                             [OperatorJsonPropertyName] = new JSchema { Type = JSchemaType.String },
                             [ValueJsonPropertyName] = new JSchema { Type = JSchemaType.String }
                         },
@@ -72,59 +75,25 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Name of the field to filter
         /// </summary>
-        [DataMember(Name = FieldJsonPropertyName, IsRequired = true)]
+        [JsonProperty(FieldJsonPropertyName, Required = Required.Always)]
         public string Field { get; set; }
 
         /// <summary>
         /// Operator to apply to the filter
         /// </summary>
-        [DataMember(Name = OperatorJsonPropertyName, IsRequired = true)]
+        [JsonProperty(OperatorJsonPropertyName, Required = Required.Always)]
+        [JsonConverter(typeof(KendoFilterOperatorConverter))]
         public KendoFilterOperator Operator { get; set; }
 
         /// <summary>
         /// Value of the filter
         /// </summary>
-        [DataMember(Name = ValueJsonPropertyName, IsRequired = false)]
+        [JsonProperty(ValueJsonPropertyName, Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public object Value { get; set; }
 
-
-        public override string ToString() => ToJson();
-
-        /// <summary>
-        /// Defines matches between <see cref="KendoFilterOperator"/> and strings
-        /// </summary>
-        public static IDictionary<KendoFilterOperator, string> AllowedOperators => new Dictionary<KendoFilterOperator, string>
-        {
-            [KendoFilterOperator.Contains] = "contains",
-            [KendoFilterOperator.EndsWith] = "endswith",
-            [KendoFilterOperator.EqualTo] = "eq",
-            [KendoFilterOperator.GreaterThan] = "gt",
-            [KendoFilterOperator.GreaterThanOrEqual] = "gte",
-            [KendoFilterOperator.IsEmpty] = "isempty",
-            [KendoFilterOperator.IsNotEmpty] = "isnotempty",
-            [KendoFilterOperator.IsNotNull] = "isnotnull",
-            [KendoFilterOperator.IsNull] = "isnull",
-            [KendoFilterOperator.LessThan] = "lt",
-            //[KendoFilterOperator.LessThanOrEqualTo] = "ltz",
-            [KendoFilterOperator.NotEqualTo] = "neq",
-            [KendoFilterOperator.StartsWith] = "startswith"
-
-        };
-
-        public string ToJson()
-        {
-            JObject jObj = new JObject
-            {
-                [FieldJsonPropertyName] = Field,
-                [OperatorJsonPropertyName] = AllowedOperators[Operator],
-
-            };
-
-            if (Value != null)
-            {
-                jObj.Add(ValueJsonPropertyName, JToken.FromObject(Value));
-            }
-            return jObj.ToString();
-        }
+        
+        public string ToJson() => SerializeObject(this);
+        
+        
     }
 }

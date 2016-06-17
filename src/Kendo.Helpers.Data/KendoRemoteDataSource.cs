@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
-
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
     public class KendoRemoteDataSource : IKendoDataSource
     {
         /// <summary>
@@ -49,64 +46,32 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Gets/sets the transport configuration
         /// </summary>
-        [DataMember(Name = TransportPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(TransportPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public KendoTransport Transport { get; set; }
 
         /// <summary>
         /// Gets/sets the schema configuration
         /// </summary>
-        [DataMember(Name = SchemaPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(SchemaPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public KendoSchema DataSchema { get; set; }
 
         /// <summary>
         /// Gets/sets the "page" configura
         /// </summary>
-        [DataMember(Name = PagePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PagePropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Page { get; set; }
 
-        [DataMember(Name = ServerFilteringPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(ServerFilteringPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? ServerFiltering { get; set; }
 
 
         /// <summary>
         /// Gets/sets the "pageSize" configuration
         /// </summary>
-        [DataMember(Name = PageSizePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PageSizePropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? PageSize { get; set; }
 
-        public string ToJson()
-        {
-            JObject obj = new JObject();
-
-
-            if (Transport != null)
-            {
-                obj.Add(TransportPropertyName, JToken.FromObject(Transport));
-            }
-
-            if (Page.HasValue)
-            {
-                obj.Add(PagePropertyName, Page.Value);
-            }
-
-            if (PageSize.HasValue)
-            {
-                obj.Add(PageSizePropertyName, PageSize.Value);
-            }
-
-            if (DataSchema != null)
-            {
-                obj.Add(SchemaPropertyName, JObject.Parse(DataSchema.ToJson()));
-            }
-
-            if (ServerFiltering.HasValue)
-            {
-                obj.Add(ServerFilteringPropertyName, ServerFiltering.Value);
-            }
-
-
-            return obj.ToString();
-        }
+        public string ToJson() => SerializeObject(this);
 
         public override string ToString() => ToJson();
     }

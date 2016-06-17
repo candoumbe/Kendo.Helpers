@@ -2,10 +2,10 @@
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
     public class KendoTransport : IKendoObject
     {
         /// <summary>
@@ -27,7 +27,6 @@ namespace Kendo.Helpers.Data
 
         public static JSchema Schema => new JSchema
         {
-            Title = "transport",
             Type = JSchemaType.Object,
             Properties =
             {
@@ -45,21 +44,27 @@ namespace Kendo.Helpers.Data
         /// Gets/Sets the "create" configuration.
         /// <para>This configuration will be used when creating new items</para>
         /// </summary>
-        [DataMember(Name = CreatePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = CreatePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public KendoTransportOperation Create { get; set; }
 
-        [DataMember(Name = ReadPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = ReadPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public KendoTransportOperation Read { get; set; }
 
-        [DataMember(Name = UpdatePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = UpdatePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public KendoTransportOperation Update { get; set; }
 
-        [DataMember(Name = DeletePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = DeletePropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public KendoTransportOperation Destroy { get; set; }
 
-
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
 
-        public virtual string ToJson() => SerializeObject(this);
+        public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
     }
 }

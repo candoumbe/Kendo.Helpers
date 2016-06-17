@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kendo.Helpers.UI.Grid
+﻿namespace Kendo.Helpers.UI.Grid
 {
     public enum GridFilterableMode
     {

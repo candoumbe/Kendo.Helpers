@@ -6,12 +6,13 @@ using Newtonsoft.Json.Schema;
 using System.Linq.Expressions;
 using System;
 using Xunit.Abstractions;
+using System.Linq;
 
 namespace Kendo.Helpers.Data.Tests
 {
-    public class KendoTransportTests
+    public class KendoTransportTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
+        private ITestOutputHelper _output;
 
         public static IEnumerable<object[]> ToJsonCases
         {
@@ -26,7 +27,9 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string,bool>>)(json =>
-                        "url/to/ressources/create".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.UrlPropertyName])
+                        JToken.Parse(json).Type == JTokenType.Object
+                        && JObject.Parse(json).Properties().Count() == 1
+                        && JObject.Parse(json)[KendoTransport.CreatePropertyName].IsValid(KendoTransportOperation.Schema)
                     ))
                 };
 
@@ -39,7 +42,9 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string,bool>>)(json =>
-                        "url/to/ressources/read".Equals((string)JObject.Parse(json)[KendoTransport.ReadPropertyName][KendoTransportOperation.UrlPropertyName])
+                        JToken.Parse(json).Type == JTokenType.Object
+                        && JObject.Parse(json).Properties().Count() == 1
+                        && JObject.Parse(json)[KendoTransport.ReadPropertyName].IsValid(KendoTransportOperation.Schema)
                     ))
                 };
 
@@ -53,8 +58,9 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string,bool>>)(json =>
-                        "url/to/ressources/create".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.UrlPropertyName]) &&
-                        "POST".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.TypePropertyName])  
+                        JToken.Parse(json).Type == JTokenType.Object
+                        && JObject.Parse(json).Properties().Count() == 1
+                        && JObject.Parse(json)[KendoTransport.CreatePropertyName].IsValid(KendoTransportOperation.Schema)
                     ))
                 };
 
@@ -72,9 +78,11 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<string,bool>>)(json =>
-                        "url/to/ressources/create".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.UrlPropertyName]) &&
-                        "POST".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.TypePropertyName]) &&
-                        "url/to/ressources/read".Equals((string)JObject.Parse(json)[KendoTransport.ReadPropertyName][KendoTransportOperation.UrlPropertyName])
+                        JToken.Parse(json).Type == JTokenType.Object
+                        && JObject.Parse(json).Properties().Count() == 2
+                        && JObject.Parse(json)[KendoTransport.CreatePropertyName].IsValid(KendoTransportOperation.Schema)
+                        && JObject.Parse(json)[KendoTransport.ReadPropertyName].IsValid(KendoTransportOperation.Schema)
+
                     ))
                 };
 
@@ -105,19 +113,12 @@ namespace Kendo.Helpers.Data.Tests
 
                     },
                     ((Expression<Func<string,bool>>)(json =>
-
-                        "url/to/ressources/read".Equals((string)JObject.Parse(json)[KendoTransport.ReadPropertyName][KendoTransportOperation.UrlPropertyName])
-                        && !JObject.Parse(json)[KendoTransport.ReadPropertyName][KendoTransportOperation.CachePropertyName].Value<bool>() 
-                        
-                        && "url/to/ressources/create".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.UrlPropertyName]) 
-                        && "POST".Equals((string)JObject.Parse(json)[KendoTransport.CreatePropertyName][KendoTransportOperation.TypePropertyName])
-
-                        && "url/to/ressources/update".Equals((string)JObject.Parse(json)[KendoTransport.UpdatePropertyName][KendoTransportOperation.UrlPropertyName])
-                        && "PATCH".Equals((string)JObject.Parse(json)[KendoTransport.UpdatePropertyName][KendoTransportOperation.TypePropertyName])
-                        
-                        && "url/to/ressources/delete".Equals((string)JObject.Parse(json)[KendoTransport.DeletePropertyName][KendoTransportOperation.UrlPropertyName])
-                        && "DELETE".Equals((string)JObject.Parse(json)[KendoTransport.DeletePropertyName][KendoTransportOperation.TypePropertyName])
-                        
+                        JToken.Parse(json).Type == JTokenType.Object
+                        && JObject.Parse(json).Properties().Count() == 4
+                        && JObject.Parse(json)[KendoTransport.CreatePropertyName].IsValid(KendoTransportOperation.Schema)
+                        && JObject.Parse(json)[KendoTransport.ReadPropertyName].IsValid(KendoTransportOperation.Schema)
+                        && JObject.Parse(json)[KendoTransport.UpdatePropertyName].IsValid(KendoTransportOperation.Schema)
+                        && JObject.Parse(json)[KendoTransport.DeletePropertyName].IsValid(KendoTransportOperation.Schema)
                     ))
                 };
             }
@@ -128,13 +129,6 @@ namespace Kendo.Helpers.Data.Tests
         {
             get
             {
-
-                yield return new object[]
-               {
-                    new KendoTransport (),
-                    false
-               };
-
                 yield return new object[]
                 {
                     new KendoTransport {
@@ -190,6 +184,8 @@ namespace Kendo.Helpers.Data.Tests
         public void ToJson(KendoTransport transport, Expression<Func<string, bool>> jsonMatcher)
         {
             _output.WriteLine($"Testing {transport}");
+            _output.WriteLine($"Matcher {jsonMatcher}");
+
             transport.ToJson().Should().Match(jsonMatcher);
         }
 
@@ -197,11 +193,20 @@ namespace Kendo.Helpers.Data.Tests
         [MemberData(nameof(SchemaCases))]
         public void Schema(KendoTransport transport, bool expectedValidity)
         {
+
             JSchema schema = KendoTransport.Schema;
-            _output.WriteLine($"Validating {transport} against scheam");
+
+            _output.WriteLine($"Validating {transport}");
+           
 
             JObject.Parse(transport.ToJson()).IsValid(schema)
-            .Should().Be(expectedValidity);
+                .Should().Be(expectedValidity);
+        }
+
+
+        public void Dispose()
+        {
+            _output = null;
         }
     }
 }

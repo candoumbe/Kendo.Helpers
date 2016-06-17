@@ -1,11 +1,11 @@
 ﻿using Kendo.Helpers.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public class CellConfiguration : IKendoObject
     {
         public const string EnabledPropertyName = "enabled";
@@ -20,9 +20,19 @@ namespace Kendo.Helpers.UI.Grid
             MinimumProperties = 1
         };
 
-        [DataMember(Name = EnabledPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = EnabledPropertyName, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public bool? Enabled { get; set; }
 
-        public string ToJson() => SerializeObject(this);
+#if DEBUG
+        public override string ToString() => ToJson();
+#endif
+
+        public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
     }
 }

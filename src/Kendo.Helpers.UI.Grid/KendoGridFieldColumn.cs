@@ -1,14 +1,11 @@
-﻿using Newtonsoft.Json.Schema;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.Serialization;
-using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.UI.Grid
 {
-    [DataContract]
+    [JsonObject]
     public class KendoGridFieldColumn : KendoGridFieldColumnBase
     {}
     

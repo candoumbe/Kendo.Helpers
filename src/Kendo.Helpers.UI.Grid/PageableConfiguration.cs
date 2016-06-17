@@ -1,18 +1,15 @@
 ﻿using Kendo.Helpers.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using static Newtonsoft.Json.JsonConvert;
+using static Newtonsoft.Json.DefaultValueHandling;
 using Newtonsoft.Json.Schema;
+using Newtonsoft.Json;
 
 namespace Kendo.Helpers.UI.Grid
 {
     /// <summary>
     /// An instance of this class represents a pageable configuration for the Kendo Grid object
     /// </summary>
-    [DataContract]
+    [JsonObject]
     public class PageableConfiguration : IKendoObject
     {
         /// <summary>
@@ -85,50 +82,58 @@ namespace Kendo.Helpers.UI.Grid
         /// <summary>
         /// Gets/Sets the number of elements of a page
         /// </summary>
-        [DataMember(Name = PageSizePropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  PageSizePropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public int? PageSize { get; set; }
 
         /// <summary>
         /// Defines if an input to go to a specif page should be displayed
         /// </summary>
-        [DataMember(Name = NumericPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  NumericPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Numeric { get; set; }
 
         /// <summary>
         /// Gets/Sets the number of buttons to display in order to jump to a specific page
         /// </summary>
-        [DataMember(Name =  ButtonCountPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =   ButtonCountPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public int? ButtonCount { get; set; }
 
         /// <summary>
         /// Gets/sets if buttons to navigate to previous and next pages should be displayed
         /// </summary>
-        [DataMember(Name = PreviousNextPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  PreviousNextPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? PreviousNext { get; set; }
 
 
-        [DataMember(Name = InputPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  InputPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Input { get; set; }
 
-        [DataMember(Name = PageSizesPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  PageSizesPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? PageSizes { get; set; }
 
         /// <summary>
         /// Gets/sets if a button to refresh data should be displayed
         /// </summary>
-        [DataMember(Name = RefreshPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  RefreshPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Refresh { get; set; }
 
 
 
-        [DataMember(Name = InfoPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  InfoPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public bool? Info { get; set; }
 
-        [DataMember(Name = MessagesPropertyName, EmitDefaultValue = false)]
+        [JsonProperty(PropertyName =  MessagesPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
         public PageableMessagesConfiguration Messages { get; set; }
 
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
 
-        public string ToJson() => SerializeObject(this);
+        public virtual string ToJson()
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
     }
 }

@@ -1,21 +1,25 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
+using static Newtonsoft.Json.JsonConvert;
+using Kendo.Helpers.Data.Converters;
 
 namespace Kendo.Helpers.Data
 {
-    [DataContract]
+    [JsonObject]
+    [JsonConverter(typeof(KendoModelConverter))]
     public class KendoModel : IKendoObject
     {
         /// <summary>
-        /// Name of the json property where the id is store
+        /// Name of the json property that holds the "id" property 
         /// </summary>
         public const string IdPropertyName = "id";
-
+        
+        /// <summary>
+        /// Name of the json property that holds the "fields" property 
+        /// </summary>
         public const string FieldsPropertyName = "fields";
 
         public static JSchema Schema => new JSchema
@@ -31,7 +35,7 @@ namespace Kendo.Helpers.Data
                 [FieldsPropertyName] = new JSchema
                 {
                     Type = JSchemaType.Object,
-                    Description = "A set of key/value pairs the configure the model fields. The key specifies the name of the field. Quote the key if it contains spaces or other symbols which are not valid for a JavaScript identifier."
+                    Description = "A set of key/value pairs the configure the model fields. The key specifies the name of the field. Quote the key if it contains spaces or other symbols which are not valid for a JavaScript identifier.",
                 }
             },
             MinimumProperties = 1
@@ -40,37 +44,24 @@ namespace Kendo.Helpers.Data
 
         
 
-        [DataMember(Name = IdPropertyName, EmitDefaultValue = false, Order = 1)]
+        [JsonProperty(
+            PropertyName = IdPropertyName, 
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate, 
+            Order = 1)]
         public string Id { get; set; }
 
-        [DataMember(Name = FieldsPropertyName, EmitDefaultValue = false, Order = 2)]
-        public IEnumerable<KendoFieldBase> Fields { get; set; }
+        [JsonProperty(
+            PropertyName = FieldsPropertyName,
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public IEnumerable<KendoFieldBase> Fields { get; set; } = Enumerable.Empty<KendoFieldBase>();
 
 
         public string ToJson()
-        {
-            JObject obj = new JObject();
-
-            obj.Add(IdPropertyName, Id);
-            if (Fields?.Any() ?? false)
-            {
-                IEnumerable<JProperty> fieldsProperties = Fields
-                    .Select(item => new JProperty(item.Name, JObject.Parse(item.ToJson())))
-                    .ToArray() 
-                    ?? Enumerable.Empty<JProperty>();
-
-                JObject properties = new JObject();
-                foreach (JProperty prop in fieldsProperties)
-                {
-                    properties.Add(prop);
-                }
-
-                obj.Add(FieldsPropertyName, properties);
-            }
-            
-            return obj.ToString();
-        }
-
+#if DEBUG
+            => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
 
         public override string ToString() => ToJson();
 
