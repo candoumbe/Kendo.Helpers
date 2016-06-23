@@ -4,7 +4,6 @@ using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
 using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Data.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace Kendo.Helpers.Data
 {

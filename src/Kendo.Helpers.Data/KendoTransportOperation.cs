@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using static Newtonsoft.Json.JsonConvert;
+﻿using static Newtonsoft.Json.JsonConvert;
 using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;

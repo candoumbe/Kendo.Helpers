@@ -14,7 +14,7 @@ namespace System.Linq.Expressions
         /// <returns></returns>
         public static Expression<Func<T, bool>> True<T>() => arg => true;
 
-
+        public static Expression<Func<T, bool>> False<T>() => x => false;
 
         public static Expression<Func<T, T>> Identity<T>() => x => x;
 

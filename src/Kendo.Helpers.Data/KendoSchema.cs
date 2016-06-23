@@ -1,12 +1,8 @@
-﻿using System.Runtime.Serialization;
-using System.Text;
-using Kendo.Helpers.Core;
+﻿using Kendo.Helpers.Core;
 using Newtonsoft.Json.Schema;
 
 using static Newtonsoft.Json.JsonConvert;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Kendo.Helpers.Data.Converters;
 
 namespace Kendo.Helpers.Data
@@ -68,7 +64,7 @@ namespace Kendo.Helpers.Data
         /// </para>
         /// </summary>
         [JsonProperty(PropertyName = TypePropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(SchemaTypeConverter))]
+        [JsonConverter(typeof(CamelCaseEnumTypeConverter))]
         public SchemaType? Type { get; set; }
 
         [JsonProperty(PropertyName = ModelPropertyName, DefaultValueHandling = DefaultValueHandling.Ignore)]

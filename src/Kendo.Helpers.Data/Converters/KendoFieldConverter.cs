@@ -4,8 +4,8 @@ using Newtonsoft.Json.Schema;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
+using Kendo.Helpers.Tools;
 
 namespace Kendo.Helpers.Data.Converters
 {
@@ -59,11 +59,7 @@ namespace Kendo.Helpers.Data.Converters
                 kf.DefaultValue = jObj[kf.Name][KendoFieldBase.FromPropertyName].Value<string>();
             }
 
-            ParameterExpression param = Expression.Parameter(typeof(KendoFieldBase));
-            Expression asExpression = Expression.TypeAs(param, objectType);
-            LambdaExpression expression = Expression.Lambda(asExpression);
-
-            return expression.Compile().DynamicInvoke(kf);
+            return kf.As(objectType);
 
         }
 

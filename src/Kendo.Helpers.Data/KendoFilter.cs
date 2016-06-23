@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
+﻿using Newtonsoft.Json.Schema;
 
 using static Newtonsoft.Json.JsonConvert;
-using System.Runtime.Serialization;
+using static Newtonsoft.Json.DefaultValueHandling;
+using static Newtonsoft.Json.Required;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Kendo.Helpers.Data.Converters;
@@ -12,6 +12,8 @@ namespace Kendo.Helpers.Data
     /// <summary>
     /// An instance of this class holds a kendo filter
     /// </summary>
+    [JsonObject]
+    [JsonConverter(typeof(KendoFilterConverter))]
     public class KendoFilter : IKendoFilter
     {
         /// <summary>
@@ -51,7 +53,20 @@ namespace Kendo.Helpers.Data
                             Required = { FieldJsonPropertyName, OperatorJsonPropertyName }
                     };
                     break;
-
+                case KendoFilterOperator.IsNotNull:
+                case KendoFilterOperator.IsNull:
+                    schema = new JSchema
+                    {
+                        Type = JSchemaType.Object,
+                        Properties =
+                        {
+                            [FieldJsonPropertyName] = new JSchema { Type = JSchemaType.String },
+                            [OperatorJsonPropertyName] = new JSchema { Type = JSchemaType.String },
+                            [ValueJsonPropertyName] = new JSchema { Type = JSchemaType.None }
+                        },
+                        Required = { FieldJsonPropertyName, OperatorJsonPropertyName }
+                    };
+                    break;
                 default:
                     schema = new JSchema
                     {
@@ -75,25 +90,36 @@ namespace Kendo.Helpers.Data
         /// <summary>
         /// Name of the field to filter
         /// </summary>
-        [JsonProperty(FieldJsonPropertyName, Required = Required.Always)]
+        [JsonProperty(FieldJsonPropertyName, Required = Always)]
         public string Field { get; set; }
 
         /// <summary>
         /// Operator to apply to the filter
         /// </summary>
-        [JsonProperty(OperatorJsonPropertyName, Required = Required.Always)]
+        [JsonProperty(OperatorJsonPropertyName, Required = Always)]
         [JsonConverter(typeof(KendoFilterOperatorConverter))]
         public KendoFilterOperator Operator { get; set; }
 
         /// <summary>
         /// Value of the filter
         /// </summary>
-        [JsonProperty(ValueJsonPropertyName, Required = Required.AllowNull, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [JsonProperty(ValueJsonPropertyName, 
+            Required = AllowNull, 
+            DefaultValueHandling = IgnoreAndPopulate,
+            NullValueHandling = NullValueHandling.Ignore)]
         public object Value { get; set; }
 
-        
-        public string ToJson() => SerializeObject(this);
-        
-        
+        public virtual string ToJson()
+#if DEBUG
+        => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
+#if DEBUG
+        public override string ToString() => ToJson();
+#endif
+
+
     }
 }

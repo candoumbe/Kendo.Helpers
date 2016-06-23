@@ -1,11 +1,8 @@
-﻿using Kendo.Helpers.Data;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Kendo.Helpers.Data.Converters
 {
@@ -19,24 +16,20 @@ namespace Kendo.Helpers.Data.Converters
         /// </summary>
         private static IEnumerable<Tuple<KendoFilterOperator, string>> AllowedOperators => new []
         {
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.Contains, "contains"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.EndsWith, "endswith"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.EqualTo, "eq"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.GreaterThan, "gt"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.GreaterThanOrEqual, "gte"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.IsEmpty, "isempty"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.IsNotEmpty, "isnotempty"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.IsNotNull, "isnotnull"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.IsNull, "isnull"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.LessThan, "lt"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.LessThanOrEqualTo, "lte"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.NotEqualTo, "neq"),
-            new Tuple<KendoFilterOperator, string> (KendoFilterOperator.StartsWith, "startswith")
+            Tuple.Create(KendoFilterOperator.Contains, "contains"),
+            Tuple.Create(KendoFilterOperator.EndsWith, "endswith"),
+            Tuple.Create(KendoFilterOperator.EqualTo, "eq"),
+            Tuple.Create(KendoFilterOperator.GreaterThan, "gt"),
+            Tuple.Create(KendoFilterOperator.GreaterThanOrEqual, "gte"),
+            Tuple.Create(KendoFilterOperator.IsEmpty, "isempty"),
+            Tuple.Create(KendoFilterOperator.IsNotEmpty, "isnotempty"),
+            Tuple.Create(KendoFilterOperator.IsNotNull, "isnotnull"),
+            Tuple.Create(KendoFilterOperator.IsNull, "isnull"),
+            Tuple.Create(KendoFilterOperator.LessThan, "lt"),
+            Tuple.Create(KendoFilterOperator.LessThanOrEqualTo, "lte"),
+            Tuple.Create(KendoFilterOperator.NotEqualTo, "neq"),
+            Tuple.Create(KendoFilterOperator.StartsWith, "startswith")
         };
-
-
-        
-
 
         public override bool CanRead => true;
         
@@ -49,9 +42,15 @@ namespace Kendo.Helpers.Data.Converters
         /// <inheritdoc />
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string value = reader.Value as string;
+            KendoFilterOperator kfo = KendoFilterOperator.EqualTo;
+            JToken token = JToken.ReadFrom(reader);
+            if (token.Type == JTokenType.Property)
+            {
+                string value = token.Value<string>();
+                kfo = ConvertFromStringToEnum(value);
+            }
 
-            return ConvertFromStringToEnum(value);
+            return kfo;
 
         }
 
@@ -77,7 +76,7 @@ namespace Kendo.Helpers.Data.Converters
         {
             KendoFilterOperator @operator = (KendoFilterOperator) value;
 
-            //writer.WritePropertyName(KendoFilter.OperatorJsonPropertyName, true);
+            writer.WritePropertyName(KendoFilter.OperatorJsonPropertyName, true);
             writer.WriteValue($"{ConvertFromEnumToString(@operator)}");          
         }
     }

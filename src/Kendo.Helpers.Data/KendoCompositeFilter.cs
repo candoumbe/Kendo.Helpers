@@ -1,18 +1,19 @@
 ﻿using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+using Kendo.Helpers.Data.Converters;
+using static Newtonsoft.Json.DefaultValueHandling;
+using static Newtonsoft.Json.Required;
+using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.Data
 {
     /// <summary>
     /// An instance of this class holds combination of <see cref="IKendoFilter"/>
     /// </summary>
-    [DataContract]
+    [JsonObject]
+    [JsonConverter(typeof(KendoCompositeFilterConverter))]
     public class KendoCompositeFilter : IKendoFilter
     {
         /// <summary>
@@ -33,38 +34,33 @@ namespace Kendo.Helpers.Data
                 [FiltersJsonPropertyName] = new JSchema { Type = JSchemaType.Array, MinimumItems = 2 },
                 [LogicJsonPropertyName] = new JSchema { Type = JSchemaType.String, Default = "and"}
             },
-            Required = {FiltersJsonPropertyName, LogicJsonPropertyName}
+            Required = {FiltersJsonPropertyName}
         };
 
         /// <summary>
         /// Collections of filters
         /// </summary>
-        [DataMember(Name = FiltersJsonPropertyName, IsRequired = true)]
+        [JsonProperty(PropertyName = FiltersJsonPropertyName, Required = Always)]
         public IEnumerable<IKendoFilter> Filters { get; set; } = Enumerable.Empty<IKendoFilter>();
 
         /// <summary>
         /// Operator to apply between <see cref="Filters"/>
         /// </summary>
-        [DataMember(Name = LogicJsonPropertyName, IsRequired = true)]
+        [JsonProperty(PropertyName = LogicJsonPropertyName, DefaultValueHandling = IgnoreAndPopulate)]
+        [JsonConverter(typeof(CamelCaseEnumTypeConverter))]
         public KendoFilterLogic Logic { get; set; } = KendoFilterLogic.And;
 
+        public virtual string ToJson()
+#if DEBUG
+        => SerializeObject(this, Formatting.Indented);
+#else
+            => SerializeObject(this);
+#endif
+
+#if DEBUG
         public override string ToString() => ToJson();
+#endif
 
-        public string ToJson()
-        {
-            JObject jObj = new JObject();
-
-            jObj.Add(LogicJsonPropertyName, Logic == KendoFilterLogic.And ? "and" : "or");
-            JArray jFilters = new JArray();
-            foreach (IKendoFilter item in Filters)
-            {
-                jFilters.Add(JObject.Parse(item.ToJson()));
-            }
-            jObj.Add(FiltersJsonPropertyName, jFilters);
-
-
-            return jObj.ToString();
-        }
 
 
     }

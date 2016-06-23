@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using Moq;
 using static Kendo.Helpers.Data.KendoFilterOperator;
 using Newtonsoft.Json.Linq;
+using System.Collections.Immutable;
 
 namespace Kendo.Helpers.Data.Tests.Converters
 {
@@ -20,20 +21,20 @@ namespace Kendo.Helpers.Data.Tests.Converters
         private Mock<JsonSerializer> _serializerMock;
         private object obj;
 
-        private static IEnumerable<Tuple<string, KendoFilterOperator>> Operators => new[]
+        private static IImmutableDictionary<string, KendoFilterOperator> Operators => new Dictionary<string, KendoFilterOperator>
         {
-            Tuple.Create("eq", EqualTo),
-            Tuple.Create("neq", NotEqualTo),
-            Tuple.Create("lt", LessThan),
-            Tuple.Create("gt", GreaterThan),
-            Tuple.Create("lte", LessThanOrEqualTo),
-            Tuple.Create("gte", GreaterThanOrEqual),
-            Tuple.Create("contains", Contains),
-            Tuple.Create("isnull", IsNull),
-            Tuple.Create("isnotnull", IsNotNull),
-            Tuple.Create("isnotempty", IsNotEmpty),
-            Tuple.Create("isempty", IsEmpty)
-        };
+            ["eq"] =  EqualTo,
+            ["neq"] =  NotEqualTo,
+            ["lt"] = LessThan,
+            ["gt"] = GreaterThan,
+            ["lte"] =  LessThanOrEqualTo,
+            ["gte"] =  GreaterThanOrEqual,
+            ["contains"] =  Contains,
+            ["isnull"] =  IsNull,
+            ["isnotnull"] =  IsNotNull,
+            ["isnotempty"] =  IsNotEmpty,
+            ["isempty"] =  IsEmpty
+        }.ToImmutableDictionary();
 
         public KendoFilterConverterTests(ITestOutputHelper outputHelper)
         {
@@ -48,18 +49,57 @@ namespace Kendo.Helpers.Data.Tests.Converters
         {
             get
             {
-                foreach (var item in Operators)
+                foreach (KeyValuePair<string, KendoFilterOperator> item in Operators)
                 {
                     yield return new object[]{
-                        $"{{field : 'Firstname', operator : '{item.Item1}', value : 'Bruce'}}",
+                        $"{{field :'Firstname', operator :'{item.Key}', value : 'Bruce'}}",
                         typeof(KendoFilter),
                         ((Expression<Func<object, bool>>) ((result) => result is KendoFilter
                             && "Firstname" == ((KendoFilter)result).Field
-                            && item.Item2 == ((KendoFilter)result).Operator
+                            && item.Value == ((KendoFilter)result).Operator
                             && ((KendoFilter)result).Value is string
                             && "Bruce".Equals((string)((KendoFilter)result).Value)))
                     };
                 }
+
+                yield return new object[]{
+                        $"{{field :'Firstname', operator :'isnull', value : null}}",
+                        typeof(KendoFilter),
+                        ((Expression<Func<object, bool>>) ((result) => result is KendoFilter
+                            && "Firstname" == ((KendoFilter)result).Field
+                            && Operators["isnull"] == ((KendoFilter)result).Operator
+                            && ((KendoFilter)result).Value == null))
+                    };
+
+                yield return new object[]{
+                        $"{{field :'Firstname', operator :'isnull'}}",
+                        typeof(KendoFilter),
+                        ((Expression<Func<object, bool>>) ((result) => result is KendoFilter
+                            && "Firstname" == ((KendoFilter)result).Field
+                            && Operators["isnull"] == ((KendoFilter)result).Operator
+                            && ((KendoFilter)result).Value == null))
+                    };
+
+                yield return new object[]{
+                        $"{{field :'Firstname', operator :'isnotnull', value : null}}",
+                        typeof(KendoFilter),
+                        ((Expression<Func<object, bool>>) ((result) => result is KendoFilter
+                            && "Firstname" == ((KendoFilter)result).Field
+                            && Operators["isnotnull"] == ((KendoFilter)result).Operator
+                            && ((KendoFilter)result).Value == null))
+                    };
+
+                yield return new object[]{
+                        $"{{field :'Firstname', operator :'isnotnull'}}",
+                        typeof(KendoFilter),
+                        ((Expression<Func<object, bool>>) ((result) => result is KendoFilter
+                            && "Firstname" == ((KendoFilter)result).Field
+                            && Operators["isnotnull"] == ((KendoFilter)result).Operator
+                            && ((KendoFilter)result).Value == null))
+                    };
+
+
+
             }
         }
 
@@ -70,14 +110,15 @@ namespace Kendo.Helpers.Data.Tests.Converters
         {
             get
             {
-                foreach (var item in Operators)
+                foreach (KeyValuePair<string, KendoFilterOperator> item in Operators)
                 {
                     yield return new object[]{
-                        new KendoFilter { Field = "Firstname", Operator = item.Item2, Value = "Bruce" },
+                        new KendoFilter { Field = "Firstname", Operator = item.Value, Value = "Bruce" },
                         ((Expression<Func<string, bool>>) ((json) => json != null 
+                            && JToken.Parse(json).Type == JTokenType.Object
                             && JObject.Parse(json).Properties().Count() == 3
                             && "Firstname".Equals(JObject.Parse(json)[KendoFilter.FieldJsonPropertyName].Value<string>())
-                            && item.Item1.Equals(JObject.Parse(json)[KendoFilter.OperatorJsonPropertyName].Value<string>())
+                            && item.Key.Equals(JObject.Parse(json)[KendoFilter.OperatorJsonPropertyName].Value<string>())
                             && "Bruce".Equals(JObject.Parse(json)[KendoFilter.ValueJsonPropertyName].Value<string>())))
 
 

@@ -1,7 +1,5 @@
 ﻿using Kendo.Helpers.Data.Converters;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
-using System.Runtime.Serialization;
 namespace Kendo.Helpers.Data
 {
     [JsonObject]

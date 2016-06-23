@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.CodeAnalysis.CSharp;
 using static System.Linq.Expressions.Expression;
 using static Kendo.Helpers.Data.KendoFilterOperator;
 
@@ -39,7 +38,7 @@ namespace Kendo.Helpers.Data
                 {
                     property = property == null
                         ? Property(pe, field)
-                        : property = Property(property, field);
+                        : Property(property, field);
                 }
 
                 

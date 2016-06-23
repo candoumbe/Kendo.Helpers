@@ -9,12 +9,31 @@ using Xunit.Abstractions;
 using static Kendo.Helpers.Data.KendoFilterLogic;
 using static Kendo.Helpers.Data.KendoFilterOperator;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace Kendo.Helpers.Data.Tests
 {
     public class KendoFilterTests
     {
         private readonly ITestOutputHelper _output;
+        private static IImmutableDictionary<string, KendoFilterOperator> Operators = new Dictionary<string, KendoFilterOperator>
+        {
+            ["contains"] = Contains,
+            ["endswith"] = EndsWith,
+            ["eq"] = EqualTo,
+            ["gt"] = GreaterThan,
+            ["gte"] = GreaterThanOrEqual,
+            ["isempty"] = IsEmpty,
+            ["isnotempty"] = IsNotEmpty,
+            ["isnotnull"] = IsNotNull,
+            ["isnull"] = IsNull,
+            ["lt"] = LessThan,
+            ["lte"] = LessThanOrEqualTo,
+            ["neq"] = NotEqualTo,
+            ["startswith"] = StartsWith
+        }.ToImmutableDictionary();
+
+
 
         public static IEnumerable<object[]> KendoFilterToJsonCases
         {
@@ -29,9 +48,32 @@ namespace Kendo.Helpers.Data.Tests
                         "Batman".Equals((string) JObject.Parse(json)[KendoFilter.ValueJsonPropertyName])
                     ))
                 };
-
             }
         }
+
+
+        public static IEnumerable<object[]> KendoFilterDeserializeCases
+        {
+            get
+            {
+                foreach (var item in Operators)
+                {
+                    yield return new object[]
+                    {
+
+                        $"{{ field = 'Firstname', operator = '{item.Key}',  Value = 'Batman'}}",
+                        ((Expression<Func<IKendoFilter, bool>>)(result => result is KendoFilter
+                            && "Firstname".Equals(((KendoFilter) result).Field)
+                            && item.Value.Equals(((KendoFilter) result).Operator) &&
+                            "Batman".Equals(((KendoFilter) result).Value)
+                        ))
+                    };
+                }
+            }
+        }
+
+
+
 
         public static IEnumerable<object[]> KendoCompositeFilterToJsonCases
         {
@@ -49,8 +91,33 @@ namespace Kendo.Helpers.Data.Tests
                     },
                     ((Expression<Func<string, bool>>)(json =>
                         JObject.Parse(json).Properties().Count() == 2 &&
-                        
+
                         "or".Equals((string) JObject.Parse(json)[KendoCompositeFilter.LogicJsonPropertyName]) &&
+
+                        "Nickname".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][0][KendoFilter.FieldJsonPropertyName]) &&
+                        "eq".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][0][KendoFilter.OperatorJsonPropertyName]) &&
+                        "Batman".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][0][KendoFilter.ValueJsonPropertyName])
+                               &&
+                        "Nickname".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][1][KendoFilter.FieldJsonPropertyName]) &&
+                        "eq".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][1][KendoFilter.OperatorJsonPropertyName]) &&
+                        "Robin".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][1][KendoFilter.ValueJsonPropertyName])
+
+                    ))
+                };
+
+                yield return new object[]
+                {
+                    new KendoCompositeFilter  {
+                        Filters = new [] {
+                            new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Batman" },
+                            new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Robin" },
+
+                        }
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                        JObject.Parse(json).Properties().Count() == 2 &&
+
+                        "and".Equals((string) JObject.Parse(json)[KendoCompositeFilter.LogicJsonPropertyName]) &&
 
                         "Nickname".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][0][KendoFilter.FieldJsonPropertyName]) &&
                         "eq".Equals((string)JObject.Parse(json)[KendoCompositeFilter.FiltersJsonPropertyName][0][KendoFilter.OperatorJsonPropertyName]) &&
@@ -80,13 +147,13 @@ namespace Kendo.Helpers.Data.Tests
                 yield return new object[]
                 {
                     new KendoFilter { Field = "Firstname", Operator = EqualTo, Value = null },
-                    true
+                    false
                 };
 
                 yield return new object[]
                 {
                     new KendoFilter { Field = "Firstname", Operator = EqualTo },
-                    true
+                    false
                 };
 
                 yield return new object[]
@@ -115,7 +182,6 @@ namespace Kendo.Helpers.Data.Tests
                         Filters = new [] {
                             new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Batman" },
                             new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Robin" },
-
                         }
                     },
                     true
@@ -125,8 +191,8 @@ namespace Kendo.Helpers.Data.Tests
                 {
                     new KendoCompositeFilter  {
                         Filters = new [] {
-                            new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Batman" },
-                            new KendoFilter { Field = "Nickname", Operator = EqualTo,  Value = "Robin" },
+                            new KendoFilter { Field = "Firstname", Operator = EqualTo,  Value = "Bruce" },
+                            new KendoFilter { Field = "Lastname", Operator = EqualTo,  Value = "Wayne" },
                         }
                     },
                     true
@@ -181,9 +247,6 @@ namespace Kendo.Helpers.Data.Tests
         [MemberData(nameof(KendoCompositeFilterSchemaTestCases))]
         public void KendoCompositeFilterSchema(KendoCompositeFilter filter, bool expectedValidity)
             => Schema(filter, expectedValidity);
-
-
-
 
 
         private void Schema(IKendoFilter filter, bool expectedValidity)
