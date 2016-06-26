@@ -31,10 +31,10 @@ namespace Kendo.Helpers.Data
         /// </summary>
         public const string ValueJsonPropertyName = "value";
 
-        public static JSchema Schema(KendoFilter filter)
+        public static JSchema Schema(KendoFilterOperator kfo)
         {
             JSchema schema;
-            switch (filter?.Operator ?? KendoFilterOperator.EqualTo)
+            switch (kfo)
             {
                 case KendoFilterOperator.Contains:
                 case KendoFilterOperator.IsEmpty:

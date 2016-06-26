@@ -10,6 +10,7 @@ using static Kendo.Helpers.Data.KendoFilterLogic;
 using static Kendo.Helpers.Data.KendoFilterOperator;
 using System.Linq;
 using System.Collections.Immutable;
+using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.Data.Tests
 {
@@ -34,7 +35,9 @@ namespace Kendo.Helpers.Data.Tests
         }.ToImmutableDictionary();
 
 
-
+        /// <summary>
+        /// Serialization of instance of <see cref="KendoFilter"/> test cases
+        /// </summary>
         public static IEnumerable<object[]> KendoFilterToJsonCases
         {
             get
@@ -51,7 +54,9 @@ namespace Kendo.Helpers.Data.Tests
             }
         }
 
-
+        /// <summary>
+        /// Deserialization of various json representation into <see cref="KendoFilter"/>
+        /// </summary>
         public static IEnumerable<object[]> KendoFilterDeserializeCases
         {
             get
@@ -71,6 +76,43 @@ namespace Kendo.Helpers.Data.Tests
                 }
             }
         }
+
+
+        public static IEnumerable<object[]> CollectionOfKendoFiltersCases
+        {
+            get
+            {
+                yield return new object[] {
+                    new IKendoFilter[]
+                    {
+                        new KendoFilter { Field = "Firstname", Operator = EqualTo, Value = "Bruce" },
+                        new KendoFilter { Field = "Lastname", Operator = EqualTo, Value = "Wayne" }
+                    },
+                    ((Expression<Func<string, bool>>)(json =>
+                        JToken.Parse(json).Type == JTokenType.Array
+                        && JArray.Parse(json).Count == 2
+                        
+
+                        && JArray.Parse(json)[0].Type == JTokenType.Object
+                        && JArray.Parse(json)[1].IsValid(KendoFilter.Schema(EqualTo))
+                        && JArray.Parse(json)[0][KendoFilter.FieldJsonPropertyName].Value<string>() == "Firstname"
+                        && JArray.Parse(json)[0][KendoFilter.OperatorJsonPropertyName].Value<string>() == "eq"
+                        && JArray.Parse(json)[0][KendoFilter.ValueJsonPropertyName].Value<string>() == "Bruce"
+
+                        && JArray.Parse(json)[1].Type == JTokenType.Object
+                        && JArray.Parse(json)[1].IsValid(KendoFilter.Schema(EqualTo))
+                        && JArray.Parse(json)[1][KendoFilter.FieldJsonPropertyName].Value<string>() == "Firstname"
+                        && JArray.Parse(json)[1][KendoFilter.OperatorJsonPropertyName].Value<string>() == "eq"
+                        && JArray.Parse(json)[1][KendoFilter.ValueJsonPropertyName].Value<string>() == "Wayne"
+
+
+                    ))
+
+                };
+            }
+        }
+
+
 
 
 
@@ -231,6 +273,13 @@ namespace Kendo.Helpers.Data.Tests
             => ToJson(filter, jsonMatcher);
 
 
+        [Theory]
+        [MemberData(nameof(CollectionOfKendoFiltersCases))]
+        public void CollectionOfFiltersToJson(IEnumerable<IKendoFilter> filters, Expression<Func<string, bool>> jsonExpectation)
+        {
+            string json = SerializeObject(filters);
+        }
+
         private void ToJson(IKendoFilter filter, Expression<Func<string, bool>> jsonMatcher)
         {
             _output.WriteLine($"Testing : {filter}{Environment.NewLine} against {Environment.NewLine} {jsonMatcher} ");
@@ -252,7 +301,7 @@ namespace Kendo.Helpers.Data.Tests
         private void Schema(IKendoFilter filter, bool expectedValidity)
         {
             JSchema schema = filter is KendoFilter
-                ? KendoFilter.Schema(filter as KendoFilter)
+                ? KendoFilter.Schema((filter as KendoFilter).Operator)
                 : KendoCompositeFilter.Schema;
 
             _output.WriteLine($"Testing :{filter} {Environment.NewLine} against {Environment.NewLine} {schema}");
