@@ -36,13 +36,13 @@ namespace Kendo.Helpers.Data.Tests
             public string Nickname { get; set; }
 
             public int Height { get; set; }
-                        
+
             public Henchman Henchman { get; set; }
         }
 
         public class Henchman : SuperHero
-        { 
-            
+        {
+
         }
 
         public KendoExpressionBuilderTests(ITestOutputHelper output)
@@ -51,7 +51,8 @@ namespace Kendo.Helpers.Data.Tests
         }
 
 
-        public static IEnumerable<object> EqualToTestCases {
+        public static IEnumerable<object> EqualToTestCases
+        {
             get
             {
                 yield return new object[]
@@ -98,6 +99,32 @@ namespace Kendo.Helpers.Data.Tests
                         }
                     },
                     ((Expression<Func<SuperHero, bool>>)(item => item.Nickname == "Batman" || item.Nickname == "Superman"))
+                };
+
+                
+                yield return new object[]
+                {
+                    new[] {
+                        new SuperHero { Firstname = "Bruce", Lastname = "Wayne", Height = 190, Nickname = "Batman" },
+                        new SuperHero { Firstname = "Clark", Lastname = "Kent", Height = 190, Nickname = "Superman" },
+                        new SuperHero { Firstname = "Barry", Lastname = "Allen", Height = 190, Nickname = "Flash" }
+
+                    },
+                    new KendoCompositeFilter {
+                        Logic = And,
+                        Filters = new IKendoFilter [] {
+                            new KendoFilter { Field = nameof(SuperHero.Firstname), Operator = Contains, Value  = "a" },
+                            new KendoCompositeFilter
+                            {
+                                Logic = Or,
+                                Filters = new [] {
+                                    new KendoFilter { Field = nameof(SuperHero.Nickname), Operator = EqualTo, Value  = "Batman" },
+                                    new KendoFilter { Field = nameof(SuperHero.Nickname), Operator = EqualTo, Value  = "Superman" }
+                                }
+                            }
+                        }
+                    },
+                    ((Expression<Func<SuperHero, bool>>)(item => item.Firstname.Contains("a") && (item.Nickname == "Batman" || item.Nickname == "Superman")))
                 };
 
             }

@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-*",
-  "description": "Kendo.Helpers.UI.DropDownList Class Library\nProvides a handy way to generate kendo dropdownlist using data-attributes",
+  "version": "2.0.0-beta-01",
+  "description": "Kendo.Helpers.UI.DropdownList Class Library\nProvides a handy way to generate kendo dropdownlist using data-attributes",
   "authors": [ "Cyrille NDOUMBE" ],
   "packOptions": {
     "tags": [ "kendo", "kendoui", "helper", "taghelper", "dropdownlist"],
@@ -17,6 +17,6 @@
     }
   },
   "dependencies": {
-    "Kendo.Helpers.Data": "3.0.0-beta"
+    "Kendo.Helpers.Data": "5.0.0-beta"
   }
 }

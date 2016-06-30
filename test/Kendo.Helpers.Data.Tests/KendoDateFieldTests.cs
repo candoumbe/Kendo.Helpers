@@ -8,12 +8,13 @@ using Xunit;
 using Xunit.Abstractions;
 using Kendo.Helpers.Data;
 using System.Linq;
+using static Newtonsoft.Json.JsonConvert;
 
 namespace Kendo.Helpers.Data.Tests
 {
-    public class KendoDateFieldTests
+    public class KendoDateFieldTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
+        private ITestOutputHelper _output;
 
         public static IEnumerable<object[]> KendoDateFieldToJsonCases
         {
@@ -56,10 +57,85 @@ namespace Kendo.Helpers.Data.Tests
                     ))
                 };
 
-                
+
             }
         }
-        
+
+        public static IEnumerable<object[]> DeserializeCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date'}}",
+                    ((Expression<Func<KendoDateField, bool>>) ((kf) => kf.Name == "BirthDate" && kf.DefaultValue == null 
+                        && kf.Editable == null
+                        && kf.From == null))
+                };
+
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date', editable : false}}",
+                    ((Expression<Func<KendoDateField, bool>>) ((kf) => 
+                        kf.Name == "BirthDate" 
+                        && kf.DefaultValue == null
+                        && kf.Editable.HasValue && !kf.Editable.Value
+                        && kf.From == null))
+                };
+
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date', editable : false, defaultValue : '1983-06-23'}}",
+                    ((Expression<Func<KendoDateField, bool>>) ((kf) => 
+                        kf.Name == "BirthDate"
+                        &&  kf.DefaultValue is string && Convert.ToString(kf.DefaultValue) == "1983-06-23"
+                        && kf.Editable.HasValue && !kf.Editable.Value
+                        && kf.From == null))
+                };
+
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date', editable : true, defaultValue : '1983-06-23'}}",
+                    ((Expression<Func<KendoDateField, bool>>) ((kf) => 
+                        kf.Name == "BirthDate"
+                        && kf.DefaultValue is string && Convert.ToString(kf.DefaultValue) == "1983-06-23"
+                        && kf.Editable.HasValue && kf.Editable.Value
+                        && kf.From == null))
+                };
+            }
+        }
+
+
+        public static IEnumerable<object[]> DeserializeToObjectCases
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date'}}",
+                    typeof(KendoDateField),
+                    ((Expression<Func<object, bool>>) ((kf) => kf is KendoDateField 
+                        && ((KendoDateField)kf).Name == "BirthDate"
+                        && ((KendoDateField)kf).DefaultValue == null
+                        && ((KendoDateField)kf).Editable == null
+                        && ((KendoDateField)kf).From == null))
+                };
+
+                
+
+                yield return new object[]
+                {
+                    "{'BirthDate':{ type : 'date', editable : false}}",
+                    typeof(KendoDateField),
+                    ((Expression<Func<object, bool>>) ((kf) => kf is KendoDateField
+                        && ((KendoDateField)kf).Name == "BirthDate" 
+                        && ((KendoDateField)kf).DefaultValue == null
+                        && ((KendoDateField)kf).Editable.HasValue && !((KendoDateField)kf).Editable.Value
+                        && ((KendoDateField)kf).From == null))
+                };         
+            }
+        }
+
 
         public static IEnumerable<object[]> KendoDateFieldSchemaCases
         {
@@ -81,7 +157,7 @@ namespace Kendo.Helpers.Data.Tests
                     yield return new object[] { item, true };
                 }
 
-                
+
             }
         }
 
@@ -96,11 +172,41 @@ namespace Kendo.Helpers.Data.Tests
         public void ToJson(KendoFieldBase kf, Expression<Func<string, bool>> resultMatcher)
         {
             _output.WriteLine($"Testing : {kf}{Environment.NewLine} against {Environment.NewLine} {resultMatcher} ");
-            kf.ToJson().Should().Match(resultMatcher);
+
+            string json = kf.ToJson();
+            _output.WriteLine($"Result : {json}");
+            json.Should().Match(resultMatcher);
+        }
+        
+        [Theory]
+        [MemberData(nameof(DeserializeCases))]
+        public void Deserialize(string json, Expression<Func<KendoDateField, bool>> deserializationExpectation)
+        {
+            _output.WriteLine($"Deserializing {json}");
+            _output.WriteLine($"Expectation : {deserializationExpectation}");
+
+            KendoDateField kdf = DeserializeObject<KendoDateField>(json);
+            _output.WriteLine($"Result : {kdf}");
+
+            kdf.Should().Match(deserializationExpectation);
+        }
+
+        [Theory]
+        [MemberData(nameof(DeserializeToObjectCases))]
+        public void DeserializeToObject(string json, Type type, Expression<Func<object, bool>> deserializationExpectation)
+        {
+            _output.WriteLine($"Deserializing {json}");
+            _output.WriteLine($"Expectation : {deserializationExpectation}");
+
+            object kdf = DeserializeObject(json, type);
+
+            _output.WriteLine($"Result : {kdf}");
+
+            kdf.Should().Match(deserializationExpectation);
         }
 
 
-        
+
         [Theory]
         [MemberData(nameof(KendoDateFieldSchemaCases))]
         public void Schema(KendoFieldBase kf, bool expectedValidity)
@@ -113,6 +219,12 @@ namespace Kendo.Helpers.Data.Tests
             JObject.Parse(kf.ToJson())
                   .IsValid(schema)
                   .Should().Be(expectedValidity);
+        }
+
+
+        public void Dispose()
+        {
+            _output = null;
         }
 
     }

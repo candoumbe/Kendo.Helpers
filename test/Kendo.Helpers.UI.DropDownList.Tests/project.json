@@ -1,24 +1,27 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "Kendo.Helpers.UI.DropDownList.Tests Class Library",
   "authors": [ "Sai" ],
   "testRunner": "xunit",
   "dependencies": {
-    "xunit": "2.1.0",
-    "dotnet-test-xunit": "1.0.0-rc2-build10025",
-    "FluentAssertions": "4.7.0",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "xunit": "2.2.0-beta2-build3300",
     "Newtonsoft.Json.Schema": "2.0.2",
-    "Kendo.Helpers.UI.Dropdownlist": "1.2.0-*"
+    "Kendo.Helpers.UI.Dropdownlist": {
+      "version": "2.0.0-*",
+      "target": "project"
+    },
+    "FluentAssertions": "4.9.1",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0"
+    }
   },
-  
+
 
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.0-rc2-3002702"
-        }
       },
       "imports": [
         "dnxcore50",

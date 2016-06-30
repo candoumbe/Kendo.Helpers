@@ -34,29 +34,29 @@ namespace Kendo.Helpers.Data.Converters
             {
                 JObject jObj = (JObject)token;
                 string fieldName = jObj.Properties().ElementAt(0).Name;
-                if (jObj.IsValid(KendoFieldBase.Schema(fieldName, FieldType.Boolean)))
+                if (objectType == typeof(KendoBooleanField) && jObj.IsValid(KendoFieldBase.Schema(fieldName, FieldType.Boolean)))
                 {
                     kf = new KendoBooleanField(fieldName);
 
                 }
-                else if (jObj.IsValid(KendoFieldBase.Schema(fieldName, FieldType.Date)))
+                else if (objectType == typeof(KendoDateField) && jObj.IsValid(KendoFieldBase.Schema(fieldName, FieldType.Date)))
                 {
-                    kf = new KendoBooleanField(fieldName);
+                    kf = new KendoDateField(fieldName);
 
                 }
-                else if (jObj.IsValid(KendoFieldBase.Schema(fieldName,FieldType.String)))
+                else if (objectType == typeof(KendoStringField) && jObj.IsValid(KendoFieldBase.Schema(fieldName,FieldType.String)))
                 {
                     kf = new KendoStringField(fieldName);
                 }
-                else if (jObj.IsValid((KendoFieldBase.Schema(fieldName, FieldType.Number))))
+                else if (objectType == typeof(KendoNumericField) && jObj.IsValid((KendoFieldBase.Schema(fieldName, FieldType.Number))))
                 {
                     kf = new KendoNumericField(fieldName);
                 }
 
-                kf.From = jObj[kf.Name][KendoFieldBase.FromPropertyName].Value<string>();
-                kf.Nullable = jObj[kf.Name][KendoFieldBase.FromPropertyName].Value<bool?>();
-                kf.Editable = jObj[kf.Name][KendoFieldBase.EditablePropertyName].Value<bool?>();
-                kf.DefaultValue = jObj[kf.Name][KendoFieldBase.FromPropertyName].Value<string>();
+                kf.From = jObj[kf.Name][KendoFieldBase.FromPropertyName]?.Value<string>();
+                kf.Nullable = jObj[kf.Name][KendoFieldBase.NullablePropertyName]?.Value<bool?>();
+                kf.Editable = jObj[kf.Name][KendoFieldBase.EditablePropertyName]?.Value<bool?>();
+                kf.DefaultValue = jObj[kf.Name][KendoFieldBase.DefaultValuePropertyName]?.Value<string>();
             }
 
             return kf.As(objectType);

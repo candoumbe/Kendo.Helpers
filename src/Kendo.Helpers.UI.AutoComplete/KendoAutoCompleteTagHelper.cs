@@ -2,6 +2,7 @@
 using Kendo.Helpers.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static Kendo.Helpers.UI.Autocomplete.AutocompleteFilterType;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Kendo.Helpers.UI.Autocomplete
 {
@@ -56,6 +57,8 @@ namespace Kendo.Helpers.UI.Autocomplete
         /// </summary>
         public const string FilterAttributeName = "data-filter";
 
+        
+
         /// <summary>
         /// Gets/sets the <see cref="IKendoDataSource"/>
         /// </summary>
@@ -81,7 +84,8 @@ namespace Kendo.Helpers.UI.Autocomplete
         public string Placeholder { get; set; }
 
         /// <summary>
-        /// The filtering method used to determine the suggestions for the current value. The default filter is "startswith" - all data items which begin with the current widget value are displayed in the suggestion popup
+        /// The filtering method used to determine the suggestions for the current value. 
+        /// The default filter is "startswith" - all data items which begin with the current widget value are displayed in the suggestion popup
         /// </summary>
         public AutocompleteFilterType? Filter { get; set; }
 
@@ -89,8 +93,6 @@ namespace Kendo.Helpers.UI.Autocomplete
         [HtmlAttributeName("asp-for")]
         public ModelExpression For { get; set; }
 
-
-       
         
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -99,7 +101,7 @@ namespace Kendo.Helpers.UI.Autocomplete
             output.Attributes.Add(TypeAttributeName, "text");
             output.TagMode = TagMode.SelfClosing;
             output.Attributes.Add(RoleAttributeName, WidgetName);
-            if (For != null)
+            if (For != null && !output.Attributes.ContainsName("id"))
             {
                 output.Attributes.Add("id", For.Metadata.PropertyName);
             }
